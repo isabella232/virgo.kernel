@@ -13,7 +13,6 @@
 	<dependencies>
 		<!-- lib/kernel -->	
 		<dependency org="org.eclipse.virgo.kernel" name="org.eclipse.virgo.kernel" rev="latest.integration" conf="lib-kernel->runtime"/>
-		<dependency org="org.eclipse.virgo.kernel" name="org.eclipse.virgo.kernel.osgicommand" rev="latest.integration" conf="lib-kernel->runtime"/>
         <dependency org="org.eclipse.virgo.kernel" name="org.eclipse.virgo.kernel.userregionfactory" rev="latest.integration" conf="lib-kernel->runtime"/>
 		<dependency org="org.slf4j" name="com.springsource.slf4j.org.apache.commons.logging" rev="${org.slf4j}" conf="lib-kernel->runtime"/>
 		<dependency org="org.aspectj" name="com.springsource.org.aspectj.weaver" rev="${org.aspectj}" conf="lib-kernel->runtime"/>
@@ -42,6 +41,7 @@
 		<exclude org="org.jboss.vfs"/>
 		<exclude org="org.apache.commons" module="com.springsource.org.apache.commons.logging"/>
 		<exclude org="org.springframework" module="org.springframework.context.support"/>
+		<exclude org="org.eclipse.virgo.kernel" module="org.eclipse.virgo.kernel.userregion"/>
 				
 		<override org="org.eclipse.virgo.util" rev="${org.eclipse.virgo.util}"/>
 		<override org="org.eclipse.virgo.medic" rev="${org.eclipse.virgo.medic}"/>

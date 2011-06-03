@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Virgo Kernel P2 Deployer
+Bundle-SymbolicName: org.eclipse.virgo.kernel.deployer.p2
+Bundle-Version: 3.0.0
+Service-Component: OSGI-INF/org.eclipse.virgo.kernel.deployer.p2.publisher.xml
+Import-Template:
+ org.osgi.framework.*;version="0",
+ org.eclipse.osgi.*;version="0",
+ org.osgi.service.*;version="0",
+ org.eclipse.equinox.p2.core;version="0",
+ org.eclipse.equinox.internal.p2.artifact.repository;version="0",
+ org.eclipse.equinox.internal.p2.artifact.repository.simple;version="0",
+ org.eclipse.equinox.internal.p2.metadata.*;version="0",
+ org.eclipse.equinox.internal.p2.publisher;version="0",
+ org.eclipse.equinox.internal.p2.publisher.eclipse;version="0",
+ org.eclipse.equinox.p2.publisher;version="0",
+ org.eclipse.equinox.p2.publisher.eclipse;version="0",
+ org.eclipse.equinox.p2.repository.artifact;version="0",
+ org.eclipse.equinox.p2.repository.metadata;version="0",
+ org.eclipse.core.runtime;version="0",
+ org.eclipse.equinox.p2.metadata.*;version="0",
+ org.eclipse.equinox.p2.query;version="0",
+ org.eclipse.equinox.spi.p2.publisher;version="0"
+Excluded-Exports: 
+ *.internal.*

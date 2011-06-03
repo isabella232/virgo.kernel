@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0"
+	 immediate="true" name="kernel.build.p2">
+	<implementation
+		class="org.eclipse.virgo.kernel.p2.build.VirgoBuildP2RepoPublisher" />
+		
+	<reference name="VirgoPublisher"
+		interface="org.eclipse.virgo.kernel.deployer.p2.VirgoPublisher"
+		policy="static"/>
+		
+	<reference name="IProvisioningAgent"
+		interface="org.eclipse.equinox.p2.core.IProvisioningAgent"
+		policy="static"/>
+</scr:component>

@@ -169,24 +169,27 @@ rem ------------------------------
     rem Run the server
   
       rem Marshall parameters
-      set KERNEL_JAVA_PARMS=%JAVA_OPTS% %DEBUG_OPTS% %JMX_OPTS%
-
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -XX:+HeapDumpOnOutOfMemoryError 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -XX:ErrorFile="%KERNEL_HOME%\serviceability\error.log" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -XX:HeapDumpPath="%KERNEL_HOME%\serviceability\heap_dump.hprof"
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Djava.security.auth.login.config="%CONFIG_DIR%\org.eclipse.virgo.kernel.authentication.config" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dorg.eclipse.virgo.kernel.authentication.file="%CONFIG_DIR%\org.eclipse.virgo.kernel.users.properties" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Djava.io.tmpdir="%TMP_DIR%" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dorg.eclipse.virgo.kernel.home="%KERNEL_HOME%" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -classpath "%CLASSPATH%" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% org.eclipse.virgo.osgi.launcher.Launcher 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -config "%KERNEL_HOME%\lib\org.eclipse.virgo.kernel.launch.properties" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Forg.eclipse.virgo.kernel.home="%KERNEL_HOME%" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Forg.eclipse.virgo.kernel.config="%CONFIG_DIR%" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Fosgi.configuration.area="%KERNEL_HOME%\work\osgi\configuration" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Fosgi.java.profile="file:%KERNEL_HOME%\lib\java6-server.profile" 
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% %LAUNCH_OPTS%
-      set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% %ADDITIONAL_ARGS%
+    set KERNEL_JAVA_PARMS=%JAVA_OPTS% %DEBUG_OPTS% %JMX_OPTS%
+	  
+	set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -XX:+HeapDumpOnOutOfMemoryError
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -XX:ErrorFile="%KERNEL_HOME%\serviceability\error.log"
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -XX:HeapDumpPath="%KERNEL_HOME%\serviceability\heap_dump.hprof"
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Djava.security.auth.login.config="%CONFIG_DIR%\org.eclipse.virgo.kernel.authentication.config"
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dorg.eclipse.virgo.kernel.authentication.file="%CONFIG_DIR%\org.eclipse.virgo.kernel.users.properties"
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Djava.io.tmpdir="%TMP_DIR%"
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dorg.eclipse.virgo.kernel.home="%KERNEL_HOME%"
+	set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Declipse.ignoreApp=true
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dorg.eclipse.virgo.kernel.config="%CONFIG_DIR%"
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dosgi.configuration.area="%KERNEL_HOME%\work\osgi\configuration"
+	set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dosgi.instance.area="%KERNEL_HOME%\work"
+	set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dosgi.install.area="%KERNEL_HOME%\lib\kernel"
+	set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dosgi.frameworkClassPath="%FWCLASSPATH%"
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -Dosgi.java.profile="file:%KERNEL_HOME%\lib\java6-server.profile" 
+	set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -classpath "%CLASSPATH%"
+	set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% org.eclipse.equinox.launcher.Main
+	set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% -noExit
+	set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% %LAUNCH_OPTS%
+    set KERNEL_JAVA_PARMS=%KERNEL_JAVA_PARMS% %ADDITIONAL_ARGS% 
   
       rem Now run it
         PUSHD %KERNEL_HOME%
