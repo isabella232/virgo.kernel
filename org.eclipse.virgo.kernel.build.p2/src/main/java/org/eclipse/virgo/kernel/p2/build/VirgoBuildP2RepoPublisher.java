@@ -180,7 +180,10 @@ public class VirgoBuildP2RepoPublisher {
 
     private String createAgentInstallLocation(String installLocation) {
         // this is done to avoid 'URI not hierarchical' issue as the ProvisioningAgentProvider accepts hierarchical URIs
-        String agentInstallLocation = "file:/" + installLocation;
+    	if (!installLocation.startsWith("/")) {
+    		installLocation = "/" + installLocation;
+    	}
+        String agentInstallLocation = "file:" + installLocation;
         agentInstallLocation = agentInstallLocation + TARGET_LOCATION_OFFSET + P2_FOLDER;
         return agentInstallLocation;
     }

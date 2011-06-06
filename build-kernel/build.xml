@@ -178,18 +178,6 @@
 		
 		<copy file="${basedir}/config/keystore" todir="${package.output.dir}/config" failonerror="false"/>
 
-		<chmod perm="600">
-			<fileset dir="${package.dir}/zip/config">
-				<include name="org.eclipse.virgo.kernel.jmxremote.access.properties"/>
-			</fileset>
-		</chmod>
-
-		<chmod perm="755">
-			<fileset dir="${package.dir}/zip/bin">
-				<include name="*.sh"/>
-			</fileset>
-		</chmod>
-
 		<!-- zip the published Virgo repositories and configuration data -->
 		<zip destfile="${target.dir}/p2repo/virgo_resources.zip">
 			<zipfileset dir="${package.dir}/zip"/>
@@ -214,6 +202,18 @@
 			<sysproperty key="installIU" value="virgo.product"/>
 			<sysproperty key="profile" value="VIRGO.kernel"/>
 		</java>
+        
+        <chmod perm="600">
+			<fileset dir="${package.output.dir}/config">
+				<include name="org.eclipse.virgo.kernel.jmxremote.access.properties"/>
+			</fileset>
+		</chmod>
+        
+		<chmod perm="755">
+			<fileset dir="${package.output.dir}/bin">
+				<include name="*.sh"/>
+			</fileset>
+		</chmod>
 		
 		<mkdir dir="${artifacts.dir}"/>
 		<zip destfile="${package.output.file}">
@@ -255,31 +255,6 @@
                 <exclude name="**/*.jar"/>
             </zipfileset>
         </zip>
-    </target>
-
-    <target name="p2.publish" depends="package.resources, p2.extract-publisher"
-            description="Publishes bundles, features and product">
-        <java jar="${p2.launcher.jar}" fork="true" taskname="p2bundles" failonerror="true" maxmemory="256m">
-            <arg line="-application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher"/>
-            <arg line="-metadataRepository ${p2.repo.url}"/>
-            <arg line="-artifactRepository ${p2.repo.url}"/>
-            <arg line="-bundles ${package.output.dir}/lib,${package.output.dir}/repository/ext"/>
-            <arg line="-publishArtifacts"/>
-            <arg line="-configs all"/>
-        </java>
-
-        <sshexec host="build.eclipse.org" 
-                username="${eclipse.buildId}" 
-                keyfile="${key.file}" 
-                passphrase="${passphrase}"
-                command="mkdir -pv /opt/public/rt/virgo/update-site/${release.type}/${build.stamp}"/>
-
-        <scp todir="${eclipse.buildId}@build.eclipse.org:/opt/public/rt/virgo/update-site/${release.type}/${build.stamp}/" 
-                keyfile="${key.file}"
-                passphrase="${passphrase}">
-            <fileset dir="${publishing.dir}"/>
-        </scp>
- 
     </target>
 
 </project>
