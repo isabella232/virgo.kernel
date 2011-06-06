@@ -177,43 +177,32 @@
 		<mkdir dir="${package.dir}/zip/repository/usr"/>
 		
 		<copy file="${basedir}/config/keystore" todir="${package.output.dir}/config" failonerror="false"/>
-
+		
 		<!-- zip the published Virgo repositories and configuration data -->
 		<zip destfile="${target.dir}/p2repo/virgo_resources.zip">
 			<zipfileset dir="${package.dir}/zip"/>
 		</zip>
-		
-		<delete dir="${package.dir}/zip" quiet="true"/>
-		
+	
 		<!-- execute product publisher -->
 		<echo message="Publishing Virgo kernel product in p2 repository" />
 		<java jar="${basedir}/p2/org.eclipse.osgi_3.7.0.v20110224.jar" fork="true" taskname="p2ProductPublishing" failonerror="true" maxmemory="256m">
 			<sysproperty key="operationType" value="p2repoPublish"/>
 			<sysproperty key="launch.config.location" value="${basedir}/lib/org.eclipse.virgo.kernel.launch.properties"/>
 			<sysproperty key="product.location" value="${target.dir}/p2repo"/>
+			<sysproperty key="additional.args" value="chmod.bin.location=${package.dir}/zip/bin;chmod.bin.permissions=755;chmod.jmx.location=${package.dir}/zip/config/org.eclipse.virgo.kernel.jmxremote.access.properties;chmod.jmx.permissions=600"/>
 		</java>
+		
+		<delete dir="${package.dir}/zip" quiet="true"/>
 		
 		<!-- execute product install -->
 		<echo message="Installing Virgo product to get the final assembly of Virgo kernel" />
 		<java jar="${basedir}/p2/org.eclipse.osgi_3.7.0.v20110224.jar" fork="true" taskname="p2ProductInstall" failonerror="true" maxmemory="256m">
 			<sysproperty key="operationType" value="installKernel"/>
-			<sysproperty key="source.p2.repo" value="file:${target.dir}/p2repo"/>
-			<sysproperty key="install.location" value="${package.output.dir}"/>
+			<sysproperty key="repository" value="file:${target.dir}/p2repo"/>
+			<sysproperty key="destination" value="${package.output.dir}"/>
 			<sysproperty key="installIU" value="virgo.product"/>
 			<sysproperty key="profile" value="VIRGO.kernel"/>
 		</java>
-        
-        <chmod perm="600">
-			<fileset dir="${package.output.dir}/config">
-				<include name="org.eclipse.virgo.kernel.jmxremote.access.properties"/>
-			</fileset>
-		</chmod>
-        
-		<chmod perm="755">
-			<fileset dir="${package.output.dir}/bin">
-				<include name="*.sh"/>
-			</fileset>
-		</chmod>
 		
 		<mkdir dir="${artifacts.dir}"/>
 		<zip destfile="${package.output.file}">

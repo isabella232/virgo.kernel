@@ -1,3 +1,4 @@
+
 package org.eclipse.virgo.kernel.p2.build;
 
 import java.net.URI;
@@ -25,13 +26,14 @@ import org.eclipse.equinox.p2.query.QueryUtil;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepository;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
+import org.eclipse.virgo.kernel.deployer.p2.VirgoPublisher;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
-import org.eclipse.virgo.kernel.deployer.p2.VirgoPublisher;
 
 /**
- * This is a helper class used during building the kernel distribution to create a p2 repository and create a kernel distro for zip operation.
+ * This is a helper class used during building the kernel distribution to create a p2 repository and create a kernel
+ * distro for zip operation.
  * 
  * <strong>Concurrent Semantics</strong><br />
  * Not thread-safe.
@@ -48,9 +50,9 @@ public class VirgoBuildP2RepoPublisher {
 
     private static final String IU_TO_INSTALL = "installIU";
 
-    private static final String INSTALL_LOCATION = "install.location";
+    private static final String INSTALL_LOCATION = "destination";
 
-    private static final String SOURCE_P2_REPO = "source.p2.repo";
+    private static final String SOURCE_P2_REPO = "repository";
 
     private static final String LAUNCH_CONFIG_LOCATION = "launch.config.location";
 
@@ -64,6 +66,8 @@ public class VirgoBuildP2RepoPublisher {
 
     private static final String OPERATION_TYPE = "operationType";
 
+    private static final String ADDITIONAL_ARGS = "additional.args";
+
     public void activate(ComponentContext context) throws Exception {
         BundleContext bundleContext = context.getBundleContext();
 
@@ -75,12 +79,14 @@ public class VirgoBuildP2RepoPublisher {
         if (publishType.equals(P2_REPO_PUBLISH)) {
             String launchConfigLocation = System.getProperty(LAUNCH_CONFIG_LOCATION);
             String productLocation = System.getProperty(PRODUCT_LOCATION);
-            
+            String additionalArgs = System.getProperty(ADDITIONAL_ARGS);
             launchConfigLocation = replaceBackslashesWithSlash(launchConfigLocation);
             productLocation = replaceBackslashesWithSlash(productLocation);
-            
+
+            Map<String, String> args = collectAdditionalArgs(additionalArgs);
+
             new ProductFileBuilder().generateProductFile(productLocation, VIRGO_PRODUCT, launchConfigLocation);
-            publisher.publishProduct(productLocation, productLocation);
+            publisher.publishProduct(productLocation, productLocation, args);
         }
 
         if (publishType.equals(INSTALL_KERNEL)) {
@@ -97,6 +103,24 @@ public class VirgoBuildP2RepoPublisher {
 
         // We are done - exit now.
         System.exit(0);
+    }
+
+    private Map<String, String> collectAdditionalArgs(String additionalArgs) {
+        if (additionalArgs != null) {
+            Map<String, String> args = new HashMap<String, String>();
+            String[] pairs = additionalArgs.split(";");
+            for (String pair : pairs) {
+                String[] splitPair = pair.split("=");
+                if (splitPair.length == 2) {
+                    args.put(splitPair[0], splitPair[1]);
+                } else {
+                    throw new IllegalArgumentException("The " + ADDITIONAL_ARGS
+                        + " property has incomplete or wrong value. It must contain key-value property pairs.");
+                }
+            }
+            return args;
+        }
+        return null;
     }
 
     private void installProduct(BundleContext bundleContext, String sourceRepoLocation, String installLocation, String installIU, String targetProfile)
@@ -180,9 +204,9 @@ public class VirgoBuildP2RepoPublisher {
 
     private String createAgentInstallLocation(String installLocation) {
         // this is done to avoid 'URI not hierarchical' issue as the ProvisioningAgentProvider accepts hierarchical URIs
-    	if (!installLocation.startsWith("/")) {
-    		installLocation = "/" + installLocation;
-    	}
+        if (!installLocation.startsWith("/")) {
+            installLocation = "/" + installLocation;
+        }
         String agentInstallLocation = "file:" + installLocation;
         agentInstallLocation = agentInstallLocation + TARGET_LOCATION_OFFSET + P2_FOLDER;
         return agentInstallLocation;

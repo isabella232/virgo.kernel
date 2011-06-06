@@ -27,11 +27,18 @@ import org.eclipse.equinox.p2.repository.artifact.IArtifactDescriptor;
 import org.eclipse.equinox.spi.p2.publisher.PublisherHelper;
 
 /**
- * Publishes a zipped resource artifact
- * <strong>Concurrent Semantics</strong><br />
+ * Publishes a zipped resource artifact <strong>Concurrent Semantics</strong><br />
  * Thread-safe.
  */
 public class ZippedResourcesPublisherAction extends AbstractPublisherAction {
+
+    private static final String CHMOD_JMX_PERMISSIONS = "chmod.jmx.permissions";
+
+    private static final String CHMOD_JMX_LOCATION = "chmod.jmx.location";
+
+    private static final String CHMOD_BIN_PERMISSIONS = "chmod.bin.permissions";
+
+    private static final String CHMOD_BIN_LOCATION = "chmod.bin.location";
 
     private static final Version DEFAULT_VERSION = Version.createOSGi(1, 0, 0);
 
@@ -41,14 +48,18 @@ public class ZippedResourcesPublisherAction extends AbstractPublisherAction {
 
     private final Object monitor = new Object();
 
-    public ZippedResourcesPublisherAction(File[] locations) {
+    private final Map<String, String> args;
+
+    public ZippedResourcesPublisherAction(File[] locations, Map<String, String> args) {
         this.locations = locations;
+        this.args = args;
     }
 
     /**
      * Executes the action, resulting in a published artifact and metadata for it
      * 
-     * @param publisherInfo - initialized {@link IPublisherInfo} with repositories to be used by this {@link IPublisherAction}
+     * @param publisherInfo - initialized {@link IPublisherInfo} with repositories to be used by this
+     *        {@link IPublisherAction}
      * @param results - {@link IPublisherResult} that will be passed on the next publishing stages
      * @param monitor - {@link IProgressMonitor} used for monitoring the progress of this action, can be <b>null</b>
      * @return - the {@link IStatus} containing the result of the operation
@@ -82,11 +93,38 @@ public class ZippedResourcesPublisherAction extends AbstractPublisherAction {
     }
 
     private void setTouchpointInstructionsToIUDescription(InstallableUnitDescription iuDescription) {
+        StringBuilder chmodTouchpointData = getCHMODConfiguration();
+
         Map<String, String> touchpointData = new HashMap<String, String>();
         // the install folder is moved two folders up in order to ensure Virgo's root structure is kept the same
-        touchpointData.put("install", "unzip(source:@artifact, target:${installFolder}/../../);");
+        touchpointData.put("install", "unzip(source:@artifact, target:${installFolder}/../../);" + chmodTouchpointData.toString());
         touchpointData.put("uninstall", "cleanupzip(source:@artifact, target:${installFolder}/../../);");
         iuDescription.addTouchpointData(MetadataFactory.createTouchpointData(touchpointData));
+    }
+
+    private StringBuilder getCHMODConfiguration() {
+        StringBuilder chmodTouchpointData = new StringBuilder();
+        if (this.args != null) {
+            if (this.args.containsKey(CHMOD_BIN_LOCATION) && this.args.containsKey(CHMOD_BIN_PERMISSIONS)) {
+                File binFolder = new File(this.args.get(CHMOD_BIN_LOCATION));
+                if (binFolder.exists() && binFolder.isDirectory()) {
+                    for (File script : binFolder.listFiles()) {
+                        if (script.getName().endsWith(".sh")) {
+                            chmodTouchpointData.append("chmod(targetDir:${installFolder}/../../bin,targetFile:" + script.getName() + ",permissions:"
+                                + this.args.get(CHMOD_BIN_PERMISSIONS) + ");");
+                        }
+                    }
+                }
+            }
+            if (this.args.containsKey(CHMOD_JMX_LOCATION) && this.args.containsKey(CHMOD_JMX_PERMISSIONS)) {
+                File jmxPropFile = new File(this.args.get(CHMOD_JMX_LOCATION));
+                if (jmxPropFile.exists() && jmxPropFile.isFile()) {
+                    chmodTouchpointData.append("chmod(targetDir:${installFolder}/../../config,targetFile:" + jmxPropFile.getName() + ",permissions:"
+                        + this.args.get(CHMOD_JMX_PERMISSIONS) + ");");
+                }
+            }
+        }
+        return chmodTouchpointData;
     }
 
     private void addZippedResourcesToIUDescription(IPublisherInfo publisherInfo, InstallableUnitDescription iuDescription) {
