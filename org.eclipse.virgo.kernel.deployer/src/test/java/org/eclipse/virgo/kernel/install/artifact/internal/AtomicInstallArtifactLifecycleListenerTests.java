@@ -250,7 +250,7 @@ public class AtomicInstallArtifactLifecycleListenerTests {
         DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
         GraphNode<InstallArtifact> graph = null;
         for (StubInstallArtifact installArtifact : installArtifactArray) {
-            GraphNode<InstallArtifact> leaf = dag.createRootNode(installArtifact);
+            GraphNode<InstallArtifact> leaf = dag.createNode(installArtifact);
 			if (graph == null) {
 				graph = leaf;
 			} else {

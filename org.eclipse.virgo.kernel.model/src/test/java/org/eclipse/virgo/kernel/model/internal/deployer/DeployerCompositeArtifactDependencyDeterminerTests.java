@@ -70,7 +70,7 @@ public class DeployerCompositeArtifactDependencyDeterminerTests {
     public void success() {
     	DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
         StubPlanInstallArtifact installArtifact = new StubPlanInstallArtifact(dag);
-        installArtifact.getGraph().addChild(dag.createRootNode(new StubInstallArtifact()));
+        installArtifact.getGraph().addChild(dag.createNode(new StubInstallArtifact()));
 		DeployerCompositeArtifact artifact = new DeployerCompositeArtifact(bundleContext, installArtifact, region1);
         assertEquals(1, this.determiner.getDependents(artifact).size());
     }
