@@ -41,7 +41,7 @@ public class PlanMemberCollectorTests {
         PlanInstallArtifact plan = createNiceMock(PlanInstallArtifact.class);
 
         DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
-        GraphNode<InstallArtifact> graph = dag.createRootNode(plan);
+        GraphNode<InstallArtifact> graph = dag.createNode(plan);
 
         expect(plan.getGraph()).andReturn(graph);
         
@@ -56,13 +56,13 @@ public class PlanMemberCollectorTests {
     public void singleLevelPlan() {
         PlanInstallArtifact plan = createNiceMock(PlanInstallArtifact.class);
         DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
-        GraphNode<InstallArtifact> tree = dag.createRootNode(plan);
+        GraphNode<InstallArtifact> tree = dag.createNode(plan);
         
         BundleInstallArtifact bundle1 = createNiceMock(BundleInstallArtifact.class);
-        tree.addChild(dag.createRootNode(bundle1));
+        tree.addChild(dag.createNode(bundle1));
         
         BundleInstallArtifact bundle2 = createNiceMock(BundleInstallArtifact.class);
-        tree.addChild(dag.createRootNode(bundle2));
+        tree.addChild(dag.createNode(bundle2));
         
         expect(plan.getGraph()).andReturn(tree);
         
@@ -79,22 +79,22 @@ public class PlanMemberCollectorTests {
     public void nestedPlan() {
         PlanInstallArtifact plan = createNiceMock(PlanInstallArtifact.class);
         DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
-        GraphNode<InstallArtifact> tree = dag.createRootNode(plan);
+        GraphNode<InstallArtifact> tree = dag.createNode(plan);
 
         expect(plan.getGraph()).andReturn(tree);
         
         BundleInstallArtifact bundle1 = createNiceMock(BundleInstallArtifact.class);
-        tree.addChild(dag.createRootNode(bundle1));
+        tree.addChild(dag.createNode(bundle1));
         
         BundleInstallArtifact bundle2 = createNiceMock(BundleInstallArtifact.class);
-        tree.addChild(dag.createRootNode(bundle2));
+        tree.addChild(dag.createNode(bundle2));
         
         PlanInstallArtifact nestedPlan = createNiceMock(PlanInstallArtifact.class);
-        GraphNode<InstallArtifact> nestedTree = dag.createRootNode(nestedPlan);
+        GraphNode<InstallArtifact> nestedTree = dag.createNode(nestedPlan);
         expect(nestedPlan.getGraph()).andReturn(nestedTree);
         
         BundleInstallArtifact bundle3 = createNiceMock(BundleInstallArtifact.class);
-        nestedTree.addChild(dag.createRootNode(bundle3));
+        nestedTree.addChild(dag.createNode(bundle3));
         
         tree.addChild(nestedTree);
         

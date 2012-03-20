@@ -85,7 +85,7 @@ public class StandardPipelineTests {
     @Before
     public void setUp() {
     		DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
-        this.installGraph = dag.createRootNode(null);
+        this.installGraph = dag.createNode(null);
         this.installEnvironment = createMock(InstallEnvironment.class);
         this.installLog = createMock(InstallLog.class);
         this.stageTrace = new ArrayList<PipelineStage>();

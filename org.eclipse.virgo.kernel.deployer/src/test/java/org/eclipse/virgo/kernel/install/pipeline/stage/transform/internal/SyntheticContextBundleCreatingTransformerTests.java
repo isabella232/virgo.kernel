@@ -87,7 +87,7 @@ public final class SyntheticContextBundleCreatingTransformerTests {
         expect(
             this.installArtifactGraphFactory.constructInstallArtifactGraph(eq(new ArtifactIdentity("bundle", "plan-name-1-synthetic.context",
                 new Version(1, 0, 0), ScopeNameFactory.createScopeName("plan-name", new Version(1, 0, 0)))), isA(ArtifactStorage.class),
-                (Map<String, String>) isNull(), (String) isNull())).andReturn(this.dag.createRootNode(syntheticContextInstallArtifact));
+                (Map<String, String>) isNull(), (String) isNull())).andReturn(this.dag.createNode(syntheticContextInstallArtifact));
 
         replay(this.installEnvironment, this.installArtifactGraphFactory);
 
@@ -113,7 +113,7 @@ public final class SyntheticContextBundleCreatingTransformerTests {
         expect(
             this.installArtifactGraphFactory.constructInstallArtifactGraph(eq(new ArtifactIdentity("bundle", "plan-name-1-synthetic.context",
                 new Version(1, 0, 0), ScopeNameFactory.createScopeName("plan-name", new Version(1, 0, 0)))), isA(ArtifactStorage.class),
-                (Map<String, String>) isNull(), (String) isNull())).andReturn(this.dag.createRootNode(syntheticContextInstallArtifact));
+                (Map<String, String>) isNull(), (String) isNull())).andReturn(this.dag.createNode(syntheticContextInstallArtifact));
 
         replay(this.installEnvironment, this.installArtifactGraphFactory);
 
@@ -140,7 +140,7 @@ public final class SyntheticContextBundleCreatingTransformerTests {
         expect(
             this.installArtifactGraphFactory.constructInstallArtifactGraph(eq(new ArtifactIdentity("bundle", "nested-plan-1-synthetic.context",
                 new Version(1, 0, 0), ScopeNameFactory.createScopeName("nested-plan", new Version(1, 0, 0)))), isA(ArtifactStorage.class),
-                (Map<String, String>) isNull(), (String) isNull())).andReturn(this.dag.createRootNode(syntheticContextInstallArtifact));
+                (Map<String, String>) isNull(), (String) isNull())).andReturn(this.dag.createNode(syntheticContextInstallArtifact));
 
         replay(this.installEnvironment, this.installArtifactGraphFactory);
 
@@ -189,11 +189,11 @@ public final class SyntheticContextBundleCreatingTransformerTests {
 
         replay(plan);
 
-        GraphNode<InstallArtifact> installTree = this.dag.createRootNode(plan);
+        GraphNode<InstallArtifact> installTree = this.dag.createNode(plan);
 
         for (String bundleSymbolicName : bundleSymbolicNames) {
             InstallArtifact bundle = createMockBundleInstallArtifact(bundleSymbolicName);
-            installTree.addChild(this.dag.createRootNode(bundle));
+            installTree.addChild(this.dag.createNode(bundle));
         }
         return installTree;
     }

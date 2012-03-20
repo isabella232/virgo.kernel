@@ -82,10 +82,10 @@ public class StubInstallArtifact implements InstallArtifact {
 
         this.artifactFS = artifactFS;
 
-        this.graph = dag.createRootNode(this);
+        this.graph = dag.createNode(this);
 
         for (InstallArtifact child : children) {
-            this.graph.addChild(dag.createRootNode(child));
+            this.graph.addChild(dag.createNode(child));
         }
     }
 
