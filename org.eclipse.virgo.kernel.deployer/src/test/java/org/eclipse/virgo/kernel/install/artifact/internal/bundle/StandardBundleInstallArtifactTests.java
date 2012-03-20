@@ -120,7 +120,7 @@ public class StandardBundleInstallArtifactTests {
         artifact.setQuasiBundle(quasiBundle);
 
         DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
-        artifact.setGraph(dag.createRootNode(artifact));
+        artifact.setGraph(dag.createNode(artifact));
 
         expect(this.bundleDriver.update(isA(BundleManifest.class))).andReturn(true);
         this.bundleDriver.refreshBundle();

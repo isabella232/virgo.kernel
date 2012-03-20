@@ -47,7 +47,7 @@ public class BundleDeploymentPropertiesTransformerTests {
         
         replay(artifact);
         DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
-        GraphNode<InstallArtifact> tree = dag.createRootNode(artifact);
+        GraphNode<InstallArtifact> tree = dag.createNode(artifact);
         
         BundleDeploymentPropertiesTransformer transformer = new BundleDeploymentPropertiesTransformer();
         transformer.transform(tree, null);
@@ -65,7 +65,7 @@ public class BundleDeploymentPropertiesTransformerTests {
         
         replay(artifact);
         DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
-        GraphNode<InstallArtifact> tree = dag.createRootNode(artifact);
+        GraphNode<InstallArtifact> tree = dag.createNode(artifact);
         
         BundleDeploymentPropertiesTransformer transformer = new BundleDeploymentPropertiesTransformer();
         transformer.transform(tree, null);
@@ -87,7 +87,7 @@ public class BundleDeploymentPropertiesTransformerTests {
         
         replay(artifact);
         DirectedAcyclicGraph<InstallArtifact> dag = new ThreadSafeDirectedAcyclicGraph<InstallArtifact>();
-        GraphNode<InstallArtifact> tree = dag.createRootNode(artifact);
+        GraphNode<InstallArtifact> tree = dag.createNode(artifact);
         
         BundleDeploymentPropertiesTransformer transformer = new BundleDeploymentPropertiesTransformer();
         transformer.transform(tree, null);

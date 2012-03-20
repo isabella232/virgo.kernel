@@ -101,7 +101,7 @@ public class ImportExpandingTransformerTests {
         replayMocks();
 
         ImportExpandingTransformer importExpander = new ImportExpandingTransformer(this.importExpander);
-        importExpander.transform(this.dag.createRootNode(bundleIinstallArtifact), installEnvironment);
+        importExpander.transform(this.dag.createNode(bundleIinstallArtifact), installEnvironment);
 
         verifyMocks();
     }
@@ -120,7 +120,7 @@ public class ImportExpandingTransformerTests {
 
         ImportExpandingTransformer importExpander = new ImportExpandingTransformer(this.importExpander);
         try {
-            importExpander.transform(this.dag.createRootNode(bundleIinstallArtifact), installEnvironment);
+            importExpander.transform(this.dag.createNode(bundleIinstallArtifact), installEnvironment);
         } catch (DeploymentException e) {
             assertTrue(e.getCause() instanceof IOException);
         }
@@ -144,7 +144,7 @@ public class ImportExpandingTransformerTests {
 
         ImportExpandingTransformer importExpander = new ImportExpandingTransformer(this.importExpander);
         try {
-            importExpander.transform(this.dag.createRootNode(bundleIinstallArtifact), installEnvironment);
+            importExpander.transform(this.dag.createNode(bundleIinstallArtifact), installEnvironment);
         } catch (DeploymentException e) {
             assertTrue(e.getCause() instanceof ImportMergeException);
         }
@@ -169,7 +169,7 @@ public class ImportExpandingTransformerTests {
 
         ImportExpandingTransformer importExpander = new ImportExpandingTransformer(this.importExpander);
         try {
-            importExpander.transform(this.dag.createRootNode(bundleIinstallArtifact), installEnvironment);
+            importExpander.transform(this.dag.createNode(bundleIinstallArtifact), installEnvironment);
         } catch (DeploymentException e) {
             assertTrue(e.getCause() instanceof UnableToSatisfyLibraryDependenciesException);
         }

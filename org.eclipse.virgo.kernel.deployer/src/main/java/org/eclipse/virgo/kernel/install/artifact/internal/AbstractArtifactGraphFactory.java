@@ -7,6 +7,7 @@
  *
  * Contributors:
  *   EclipseSource - Bug 358442 Change InstallArtifact graph from a tree to a DAG
+ *   EclipseSource - Bug 369907 Rework DAG interface
  *******************************************************************************/
 
 package org.eclipse.virgo.kernel.install.artifact.internal;
@@ -36,9 +37,7 @@ public abstract class AbstractArtifactGraphFactory implements InstallArtifactGra
     }
 
     protected GraphNode<InstallArtifact> constructAssociatedGraphNode(GraphAssociableInstallArtifact rootArtifact) throws DeploymentException {
-        //TODO: rework the DAG interface to contain just a createNode method and then call that instead of the following close approximation
-        GraphNode<InstallArtifact> graphNode = this.dag.createRootNode(rootArtifact);
-        this.dag.deleteRootNode(graphNode);
+        GraphNode<InstallArtifact> graphNode = this.dag.createNode(rootArtifact);
         rootArtifact.setGraph(graphNode);
         return graphNode;
     }
