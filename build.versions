@@ -16,7 +16,7 @@ org.slf4j=1.6.1
 org.slf4j.spi=1.6.1
 org.springframework.osgi=1.2.1
 org.springframework=3.0.5.RELEASE
-org.apache.felix.gogo=0.8.0.v201107131313
+org.apache.felix.gogo=0.8.0.v201105062003
 com.springsource.org.apache.mina.core=2.0.2
 com.springsource.org.apache.sshd.core=0.5.0
 
