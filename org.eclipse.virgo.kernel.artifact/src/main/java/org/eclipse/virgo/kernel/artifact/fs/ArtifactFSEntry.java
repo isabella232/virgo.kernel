@@ -11,6 +11,7 @@
 
 package org.eclipse.virgo.kernel.artifact.fs;
 
+import java.io.Closeable;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -24,7 +25,7 @@ import java.io.OutputStream;
  * 
  * @see ArtifactFS
  */
-public interface ArtifactFSEntry {
+public interface ArtifactFSEntry extends Closeable {
 
     /**
      * Gets the path of this entry, relative to the root {@link ArtifactFS}

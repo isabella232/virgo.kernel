@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.xml.XmlValidationModeDetector;
 
-
 import org.eclipse.virgo.kernel.artifact.fs.ArtifactFS;
 import org.eclipse.virgo.kernel.artifact.fs.ArtifactFSEntry;
 import org.eclipse.virgo.kernel.deployer.core.DeploymentException;
@@ -92,12 +91,16 @@ final class ServiceScoper {
         List<ArtifactFSEntry> configFiles = new ArrayList<ArtifactFSEntry>();
 
         ArtifactFSEntry entry = bundleData.getEntry(SPRING_CONFIG_DIR);
-        if (entry.exists()) {
-            try {
-                configFiles.addAll(findConfigFiles(bundleData, entry));
-            } catch (IOException e) {
-                throw new DeploymentException("Unable to read Spring config files.", e);
+        try {
+            if (entry.exists()) {
+                try {
+                    configFiles.addAll(findConfigFiles(bundleData, entry));
+                } catch (IOException e) {
+                    throw new DeploymentException("Unable to read Spring config files.", e);
+                }
             }
+        } finally {
+            IOUtils.closeQuietly(entry);
         }
 
         return configFiles;
@@ -189,6 +192,7 @@ final class ServiceScoper {
             throw new DeploymentException("Error reading MANIFEST.MF from '" + compositeArtifactFS + "'", ex);
         } finally {
             IOUtils.closeQuietly(reader);
+            IOUtils.closeQuietly(entry);
         }
     }
 }

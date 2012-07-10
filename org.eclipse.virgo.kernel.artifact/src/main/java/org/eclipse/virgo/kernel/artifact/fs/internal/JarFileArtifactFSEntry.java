@@ -168,4 +168,9 @@ final class JarFileArtifactFSEntry implements ArtifactFSEntry {
         return false;
     }
 
+    @Override
+    public void close() throws IOException {
+        this.jarFile.close();
+    }
+
 }

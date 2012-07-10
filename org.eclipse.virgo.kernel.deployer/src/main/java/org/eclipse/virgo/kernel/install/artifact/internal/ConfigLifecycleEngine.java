@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.eclipse.virgo.kernel.artifact.fs.ArtifactFS;
+import org.eclipse.virgo.kernel.artifact.fs.ArtifactFSEntry;
 import org.eclipse.virgo.kernel.deployer.config.ConfigurationDeployer;
 import org.eclipse.virgo.kernel.install.artifact.ArtifactIdentity;
 import org.eclipse.virgo.util.io.IOUtils;
@@ -66,11 +67,14 @@ public final class ConfigLifecycleEngine implements StartEngine, RefreshEngine, 
 
     private void updateConfiguration(ArtifactIdentity artifactIdentity, ArtifactFS artifactFS) throws IOException {
         InputStream inputStream = null;
+        ArtifactFSEntry entry = null;
         try {
-            inputStream = artifactFS.getEntry("").getInputStream();
+            entry = artifactFS.getEntry("");
+            inputStream = entry.getInputStream();
             configurationDeployer.publishConfiguration(artifactIdentity.getName(), getProperties(inputStream));
         } finally {
             IOUtils.closeQuietly(inputStream);
+            IOUtils.closeQuietly(entry);
         }
     }
 

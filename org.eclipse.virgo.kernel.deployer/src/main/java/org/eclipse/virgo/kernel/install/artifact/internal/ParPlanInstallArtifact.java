@@ -34,6 +34,7 @@ import org.eclipse.virgo.kernel.serviceability.NonNull;
 import org.eclipse.virgo.kernel.shim.scope.ScopeFactory;
 import org.eclipse.virgo.medic.eventlog.EventLogger;
 import org.eclipse.virgo.util.common.GraphNode;
+import org.eclipse.virgo.util.io.IOUtils;
 import org.eclipse.virgo.util.math.OrderedPair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +97,7 @@ final class ParPlanInstallArtifact extends StandardPlanInstallArtifact {
 
         ArtifactFSEntry entry = artifactFS.getEntry("/");
         ArtifactFSEntry[] children = entry.getChildren();
+        IOUtils.closeQuietly(entry);
         if (children.length == 0) {
             throw new DeploymentException("Failed to find child artifacts in par " + artifactFS);
         }

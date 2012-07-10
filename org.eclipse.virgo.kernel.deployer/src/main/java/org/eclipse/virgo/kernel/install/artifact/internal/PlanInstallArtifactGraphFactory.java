@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.virgo.kernel.artifact.fs.ArtifactFSEntry;
 import org.eclipse.virgo.kernel.artifact.plan.PlanDescriptor;
 import org.eclipse.virgo.kernel.artifact.plan.PlanDescriptor.Provisioning;
 import org.eclipse.virgo.kernel.artifact.plan.PlanReader;
@@ -107,12 +108,15 @@ final class PlanInstallArtifactGraphFactory extends AbstractArtifactGraphFactory
      */
     private PlanDescriptor getPlanDescriptor(ArtifactStorage artifactStorage) throws DeploymentException {
         InputStream in = null;
+        ArtifactFSEntry entry = null;
         try {
-            in = artifactStorage.getArtifactFS().getEntry("").getInputStream();
+            entry = artifactStorage.getArtifactFS().getEntry("");
+            in = entry.getInputStream();
             PlanDescriptor planDescriptor = new PlanReader().read(in);
             return planDescriptor;
         } finally {
             IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(entry);
         }
     }
 

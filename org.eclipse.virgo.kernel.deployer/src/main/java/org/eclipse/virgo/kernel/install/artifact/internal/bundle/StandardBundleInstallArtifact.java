@@ -141,15 +141,19 @@ final class StandardBundleInstallArtifact extends AbstractInstallArtifact implem
 
     private BundleManifest getManifestFromArtifactFS() throws IOException {
         ArtifactFSEntry manifestEntry = this.artifactStorage.getArtifactFS().getEntry(MANIFEST_ENTRY_NAME);
-        if (manifestEntry != null && manifestEntry.exists()) {
-            Reader manifestReader = new InputStreamReader(manifestEntry.getInputStream());
-            try {
-                return BundleManifestFactory.createBundleManifest(manifestReader);
-            } finally {
-                manifestReader.close();
+        try {
+            if (manifestEntry != null && manifestEntry.exists()) {
+                Reader manifestReader = new InputStreamReader(manifestEntry.getInputStream());
+                try {
+                    return BundleManifestFactory.createBundleManifest(manifestReader);
+                } finally {
+                    manifestReader.close();
+                }
+            } else {
+                return BundleManifestFactory.createBundleManifest();
             }
-        } else {
-            return BundleManifestFactory.createBundleManifest();
+        } finally {
+            IOUtils.closeQuietly(manifestEntry);
         }
     }
 
@@ -493,7 +497,9 @@ final class StandardBundleInstallArtifact extends AbstractInstallArtifact implem
 
     public void deleteEntry(String targetPath) {
         deleteEntry(getQuasiBundle().getBundleFile(), targetPath);
-        getArtifactFS().getEntry(targetPath).delete();
+        ArtifactFSEntry entry = getArtifactFS().getEntry(targetPath);
+        entry.delete();
+        IOUtils.closeQuietly(entry);
     }
 
     private void deleteEntry(File root, String path) {
@@ -509,7 +515,12 @@ final class StandardBundleInstallArtifact extends AbstractInstallArtifact implem
 
     public void updateEntry(URI inputPath, String targetPath) {
         updateEntry(getQuasiBundle().getBundleFile(), inputPath, targetPath);
-        updateEntry(getArtifactFS().getEntry(targetPath), inputPath);
+        ArtifactFSEntry entry = getArtifactFS().getEntry(targetPath);
+        try {
+            updateEntry(entry, inputPath);
+        } finally {
+            IOUtils.closeQuietly(entry);
+        }
     }
 
     private void updateEntry(ArtifactFSEntry entry, URI inputPath) {

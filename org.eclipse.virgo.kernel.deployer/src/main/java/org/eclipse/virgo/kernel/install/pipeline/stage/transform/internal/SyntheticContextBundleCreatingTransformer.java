@@ -42,8 +42,8 @@ import org.eclipse.virgo.util.osgi.manifest.ImportBundle;
 import org.osgi.framework.Version;
 
 /**
- * A {@link Transformer} implementation that examines the install graph and, for each scoped plan found within the graph,
- * adds a synthetic context bundle to the plan.
+ * A {@link Transformer} implementation that examines the install graph and, for each scoped plan found within the
+ * graph, adds a synthetic context bundle to the plan.
  * 
  * <p />
  * 
@@ -83,21 +83,21 @@ final class SyntheticContextBundleCreatingTransformer implements Transformer, Sc
             Set<BundleInstallArtifact> childBundles = getBundlesInScope(graph);
 
             PlanInstallArtifact planArtifact = (PlanInstallArtifact) graph.getValue();
-            
+
             String scopeName = determineSyntheticContextScopeName(planArtifact);
-            
+
             String name = scopeName + SYNTHETIC_CONTEXT_SUFFIX;
             Version version = planArtifact.getVersion();
-            
+
             ArtifactIdentity identity = new ArtifactIdentity(ArtifactIdentityDeterminer.BUNDLE_TYPE, name, version, scopeName);
-                        
+
             BundleManifest syntheticContextBundleManifest = createSyntheticContextBundleManifest(identity, childBundles);
-            
+
             ArtifactStorage artifactStorage = this.artifactStorageFactory.createDirectoryStorage(identity, name + ".jar");
             writeSyntheticContextBundle(syntheticContextBundleManifest, artifactStorage.getArtifactFS());
-            
-            GraphNode<InstallArtifact> syntheticContextBundle = this.installArtifactGraphFactory.constructInstallArtifactGraph(
-                identity, artifactStorage, null, null);
+
+            GraphNode<InstallArtifact> syntheticContextBundle = this.installArtifactGraphFactory.constructInstallArtifactGraph(identity,
+                artifactStorage, null, null);
             graph.addChild(syntheticContextBundle);
         }
     }
@@ -120,15 +120,19 @@ final class SyntheticContextBundleCreatingTransformer implements Transformer, Sc
         return visitor.getChildBundles();
     }
 
-    private void writeSyntheticContextBundle(BundleManifest syntheticContextBundleManifest, ArtifactFS artifactFS) {                
+    private void writeSyntheticContextBundle(BundleManifest syntheticContextBundleManifest, ArtifactFS artifactFS) {
         ArtifactFSEntry entry = artifactFS.getEntry(JarFile.MANIFEST_NAME);
-        Writer manifestWriter = new OutputStreamWriter(entry.getOutputStream());
         try {
-            syntheticContextBundleManifest.write(manifestWriter);
-        } catch (IOException ioe) {
-            throw new FatalDeploymentException("Failed to write out synthetic context's manifest", ioe);
+            Writer manifestWriter = new OutputStreamWriter(entry.getOutputStream());
+            try {
+                syntheticContextBundleManifest.write(manifestWriter);
+            } catch (IOException ioe) {
+                throw new FatalDeploymentException("Failed to write out synthetic context's manifest", ioe);
+            } finally {
+                IOUtils.closeQuietly(manifestWriter);
+            }
         } finally {
-            IOUtils.closeQuietly(manifestWriter);
+            IOUtils.closeQuietly(entry);
         }
     }
 
@@ -148,7 +152,7 @@ final class SyntheticContextBundleCreatingTransformer implements Transformer, Sc
     }
 
     private String determineSyntheticContextScopeName(PlanInstallArtifact plan) {
-        return ScopeNameFactory.createScopeName(plan.getName(), plan.getVersion());        
+        return ScopeNameFactory.createScopeName(plan.getName(), plan.getVersion());
     }
 
     private void addImportForEachChildBundle(BundleManifest bundleManifest, Set<BundleInstallArtifact> childBundles) {

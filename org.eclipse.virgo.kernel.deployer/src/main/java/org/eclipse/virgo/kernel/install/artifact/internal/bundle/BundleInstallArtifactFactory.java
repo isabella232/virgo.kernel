@@ -19,7 +19,6 @@ import java.util.jar.JarFile;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
 
-
 import org.eclipse.virgo.kernel.artifact.fs.ArtifactFS;
 import org.eclipse.virgo.kernel.artifact.fs.ArtifactFSEntry;
 import org.eclipse.virgo.kernel.deployer.core.DeploymentException;
@@ -54,9 +53,9 @@ final class BundleInstallArtifactFactory {
     private final InstallArtifactRefreshHandler refreshHandler;
 
     private final BundleDriverFactory bundleDriverFactory;
-    
+
     private final EventLogger eventLogger;
-    
+
     private final ArtifactIdentityDeterminer identityDeterminer;
 
     BundleInstallArtifactFactory(BundleContext kernelBundleContext, InstallArtifactRefreshHandler refreshHandler,
@@ -68,18 +67,20 @@ final class BundleInstallArtifactFactory {
         this.identityDeterminer = identityDeterminer;
     }
 
-    BundleInstallArtifact createBundleInstallArtifact(ArtifactIdentity identity, ArtifactStorage artifactStorage, String repositoryName) throws DeploymentException {
+    BundleInstallArtifact createBundleInstallArtifact(ArtifactIdentity identity, ArtifactStorage artifactStorage, String repositoryName)
+        throws DeploymentException {
 
         ArtifactStateMonitor artifactStateMonitor = new StandardArtifactStateMonitor(this.kernelBundleContext);
 
         StandardBundleDriver bundleDriver = this.bundleDriverFactory.createBundleDriver(identity, artifactStateMonitor);
 
-        BundleManifest bundleManifest = retrieveArtifactFSManifest(artifactStorage.getArtifactFS());        
+        BundleManifest bundleManifest = retrieveArtifactFSManifest(artifactStorage.getArtifactFS());
 
-        StandardBundleInstallArtifact bundleInstallArtifact = new StandardBundleInstallArtifact(identity, bundleManifest, artifactStorage, bundleDriver, artifactStateMonitor, this.refreshHandler, repositoryName, this.eventLogger, this.identityDeterminer);
+        StandardBundleInstallArtifact bundleInstallArtifact = new StandardBundleInstallArtifact(identity, bundleManifest, artifactStorage,
+            bundleDriver, artifactStateMonitor, this.refreshHandler, repositoryName, this.eventLogger, this.identityDeterminer);
 
-        //TODO: need to set identity version from bundleManifest etc. Best to use supertype method.
-        
+        // TODO: need to set identity version from bundleManifest etc. Best to use supertype method.
+
         bundleDriver.setInstallArtifact(bundleInstallArtifact);
 
         return bundleInstallArtifact;
@@ -87,19 +88,23 @@ final class BundleInstallArtifactFactory {
 
     private BundleManifest retrieveArtifactFSManifest(ArtifactFS artifactFS) throws DeploymentException {
         ArtifactFSEntry manifestEntry = artifactFS.getEntry(JarFile.MANIFEST_NAME);
-        if (manifestEntry != null && manifestEntry.exists()) {
-            try {
-                Reader manifestReader = new InputStreamReader(manifestEntry.getInputStream());
+        try {
+            if (manifestEntry != null && manifestEntry.exists()) {
                 try {
-                    return BundleManifestFactory.createBundleManifest(manifestReader);
-                } finally {
-                    IOUtils.closeQuietly(manifestReader);
+                    Reader manifestReader = new InputStreamReader(manifestEntry.getInputStream());
+                    try {
+                        return BundleManifestFactory.createBundleManifest(manifestReader);
+                    } finally {
+                        IOUtils.closeQuietly(manifestReader);
+                    }
+                } catch (IOException ioe) {
+                    throw new DeploymentException("Failed to read manifest for bundle from " + artifactFS, ioe);
                 }
-            } catch (IOException ioe) {
-                throw new DeploymentException("Failed to read manifest for bundle from " + artifactFS, ioe);
+            } else {
+                return BundleManifestFactory.createBundleManifest();
             }
-        } else {
-            return BundleManifestFactory.createBundleManifest();
+        } finally {
+            IOUtils.closeQuietly(manifestEntry);
         }
     }
 
