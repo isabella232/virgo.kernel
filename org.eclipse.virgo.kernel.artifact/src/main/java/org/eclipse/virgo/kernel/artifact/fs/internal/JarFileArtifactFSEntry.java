@@ -13,7 +13,11 @@
 
 package org.eclipse.virgo.kernel.artifact.fs.internal;
 
+import java.io.BufferedInputStream;
+import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,12 +27,18 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.eclipse.virgo.kernel.artifact.fs.ArtifactFS;
 import org.eclipse.virgo.kernel.artifact.fs.ArtifactFSEntry;
 
 /**
  * {@link JarFileArtifactFSEntry} is an {@link ArtifactFSEntry} implementation for JAR file entries.
+ * <p/>
+ * The implementation uses ZipInputStream specifically to avoid JarFile's caching behaviour, inherited from that of
+ * ZipFile. See the note on caching in http://java.sun.com/developer/technicalArticles/Programming/compression/
+ * JarFile's caching behaviour produces incorrect results when a JAR file is replaced with a new version since the cache
+ * returns entries from the old version.
  * 
  * <strong>Concurrent Semantics</strong><br />
  * 
@@ -36,11 +46,9 @@ import org.eclipse.virgo.kernel.artifact.fs.ArtifactFSEntry;
  */
 final class JarFileArtifactFSEntry implements ArtifactFSEntry {
 
+    private final File file;
+
     private final String entryName;
-
-    private final JarFile jarFile;
-
-    private final ZipEntry zipEntry;
 
     /**
      * Constructs a new {@link JarFileArtifactFSEntry} for the given file which is assumed to be in JAR format and the
@@ -51,13 +59,8 @@ final class JarFileArtifactFSEntry implements ArtifactFSEntry {
      * @throws IOException if the entry cannot be created
      */
     JarFileArtifactFSEntry(File file, String entryName) throws IOException {
-        this(new JarFile(file), entryName);
-    }
-
-    private JarFileArtifactFSEntry(JarFile jarFile, String entryName) {
+        this.file = file;
         this.entryName = entryName;
-        this.jarFile = jarFile;
-        this.zipEntry = jarFile.getEntry(entryName);
     }
 
     /**
@@ -91,23 +94,30 @@ final class JarFileArtifactFSEntry implements ArtifactFSEntry {
      * {@inheritDoc}
      */
     public boolean isDirectory() {
-        return exists() ? this.zipEntry.isDirectory() : false;
+        ZipEntry zipEntry = findZipEntry();
+        return zipEntry != null ? zipEntry.isDirectory() : false;
+    }
+
+    private ZipEntry findZipEntry() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     public InputStream getInputStream() {
-        if (!exists()) {
+        ZipEntry zipEntry = findZipEntry();
+        if (zipEntry == null) {
             throw new UnsupportedOperationException("Cannot open an input stream for a non-existent entry");
         }
 
-        if (isDirectory()) {
+        if (zipEntry.isDirectory()) {
             throw new UnsupportedOperationException("Cannot open an input stream for a directory");
         }
-        
+
         try {
-            return this.jarFile.getInputStream(this.zipEntry);
+            return this.jarFile.getInputStream(zipEntry);
         } catch (IOException e) {
             // Preserve compatibility with current interface.
             throw new RuntimeException(e);
@@ -135,7 +145,7 @@ final class JarFileArtifactFSEntry implements ArtifactFSEntry {
                 JarEntry entry = entries.nextElement();
                 String childEntry = entry.getName();
                 if (childEntry.length() > this.entryName.length() && childEntry.startsWith(this.entryName)) {
-                    children.add(new JarFileArtifactFSEntry(this.jarFile, childEntry));
+                    children.add(new JarFileArtifactFSEntry(this.file, childEntry));
                 }
             }
         }
@@ -166,6 +176,38 @@ final class JarFileArtifactFSEntry implements ArtifactFSEntry {
             }
         }
         return false;
+    }
+
+    private class JarFileScanner implements Closeable {
+
+        private final ZipInputStream zipInputStream;
+
+        public JarFileScanner() {
+            InputStream is = null;
+            try {
+                is = new BufferedInputStream(new FileInputStream(file));
+            } catch (FileNotFoundException _) {
+            }
+            this.zipInputStream = is == null ? null : new ZipInputStream(is);
+        }
+
+        public ZipEntry nextEntry() {
+            if (this.zipInputStream != null) {
+                try {
+                    return this.zipInputStream.getNextEntry();
+                } catch (IOException _) {
+                }
+            }
+            return null;
+        }
+        
+        public ZipInputStream getZipInputStream() {
+            return this.zipInputStream;
+        }
+
+        public void close() throws IOException {
+            this.zipInputStream.close();
+        }
     }
 
 }
