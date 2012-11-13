@@ -51,7 +51,7 @@ final class ParPlanInstallArtifact extends StandardPlanInstallArtifact {
 
     private static final ArrayList<ArtifactSpecification> EMPTY_ARTIFACT_SPECIFICATION_LIST = new ArrayList<ArtifactSpecification>();
 
-    private static final String META_INF_PATH = "//META-INF";
+    private static final String META_INF_PATH = "/META-INF";
 
     private final Object monitor = new Object();
 
