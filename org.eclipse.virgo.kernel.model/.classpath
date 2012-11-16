@@ -39,7 +39,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.virgo.kernel.artifact"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.virgo.kernel.deployer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.virgo.kernel.stubs"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.context/3.1.0.RELEASE/org.springframework.context-3.1.0.RELEASE.jar" sourcepath="/IVY_CACHE/org.springframework/org.springframework.context/3.1.0.RELEASE/org.springframework.context-sources-3.1.0.RELEASE.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.context/3.2.0.RC1/org.springframework.context-3.2.0.RC1.jar" sourcepath="/IVY_CACHE/org.springframework/org.springframework.context/3.2.0.RC1/org.springframework.context-sources-3.2.0.RC1.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.eclipse.virgo.mirrored/org.eclipse.equinox.region/1.1.0.v20120319-1602/org.eclipse.equinox.region-1.1.0.v20120319-1602.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.eclipse.virgo.nano/org.eclipse.virgo.nano.core/3.6.0.D-20121028233243/org.eclipse.virgo.nano.core-3.6.0.D-20121028233243.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.eclipse.virgo.nano/org.eclipse.virgo.nano.deployer.api/3.6.0.D-20121028233243/org.eclipse.virgo.nano.deployer.api-3.6.0.D-20121028233243.jar"/>
