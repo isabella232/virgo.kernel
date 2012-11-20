@@ -60,6 +60,8 @@
 		<dependency org="org.eclipse.virgo.mirrored" name="org.slf4j.jcl" rev="${org.slf4j.jcl}" conf="test->runtime"/>
 		<dependency org="org.eclipse.virgo.mirrored" name="org.slf4j.jul" rev="${org.slf4j.jul}" conf="test->runtime"/>
 
+		<dependency org="org.springframework" name="org.springframework.spring-library" rev="${org.springframework}" />
+
 		<!-- Prevent Xerces from being on the classpath to work around Java bug 6723276 during integration testing -->
 		<exclude org="org.apache.xerces"/>
         <exclude org="org.eclipse.osgi"/>
