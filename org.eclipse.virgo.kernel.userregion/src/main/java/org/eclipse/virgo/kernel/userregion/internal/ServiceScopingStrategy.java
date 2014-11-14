@@ -58,7 +58,7 @@ final class ServiceScopingStrategy {
      * reference is in the global scope, the given bundle context is scoped, and there is another service in the scope
      * which shadows the given service reference.
      */
-    boolean isPotentiallyVisible(ServiceReference<?> serviceReference, BundleContext consumingBundleContext) {
+    boolean isPotentiallyVisible(ServiceReference<Scope> serviceReference, BundleContext consumingBundleContext) {
         boolean matchesScope = true;
         Scope serviceScope = getServiceScope(serviceReference);
         if (serviceScope != null && !serviceScope.isGlobal()) {
@@ -82,7 +82,7 @@ final class ServiceScopingStrategy {
      * Spring DM supports a manifest header which specifies the directory containing application context files. Again
      * this is not currently taken into account when the repository is built.
      */
-    void scopeReferences(Collection<ServiceReference<?>> references, BundleContext consumingBundleContext, String className, String filter) {
+    void scopeReferences(Collection<ServiceReference<Scope>> references, BundleContext consumingBundleContext, String className, String filter) {
         Bundle consumingBundle = consumingBundleContext.getBundle();
         Scope lookupScope = getLookupScope(consumingBundle, className, filter);
         Scope consumerScope = getBundleScope(consumingBundle);
@@ -93,7 +93,7 @@ final class ServiceScopingStrategy {
          * If some of the service references are in the consumer's scope, restrict the set to just those.
          */
         if (lookupScope.isGlobal() && !consumerScope.isGlobal()) {
-            Collection<ServiceReference<?>> scopedReferences = getScopedReferences(references, consumerScope);
+            Collection<ServiceReference<Scope>> scopedReferences = getScopedReferences(references, consumerScope);
             if (!scopedReferences.isEmpty()) {
                 removeAllExcept(references, scopedReferences);
                 return;
@@ -102,27 +102,27 @@ final class ServiceScopingStrategy {
         restrictServicesToScope(references, lookupScope);
     }
 
-    private void removeAllExcept(Collection<ServiceReference<?>> references, Collection<ServiceReference<?>> scopedReferences) {
+    private void removeAllExcept(Collection<ServiceReference<Scope>> references, Collection<ServiceReference<Scope>> scopedReferences) {
         /*
          * The simple implementation of clearing references and then using addAll to add
          * in scopedReferences is no good as the find hook is passed a shrinkable collection
          * that does not support add or addAll.
          */
-        Iterator<ServiceReference<?>> iterator = references.iterator();
+        Iterator<ServiceReference<Scope>> iterator = references.iterator();
         while (iterator.hasNext()) {
-            ServiceReference<?> ref = iterator.next();
+            ServiceReference<Scope> ref = iterator.next();
             if (!scopedReferences.contains(ref)) {
                 iterator.remove();
             }
         }
     }
 
-    private Collection<ServiceReference<?>> getScopedReferences(Collection<ServiceReference<?>> references, Scope scope) {
-        Collection<ServiceReference<?>> scopedReferences = new HashSet<ServiceReference<?>>();
+    private Collection<ServiceReference<Scope>> getScopedReferences(Collection<ServiceReference<Scope>> references, Scope scope) {
+        Collection<ServiceReference<Scope>> scopedReferences = new HashSet<ServiceReference<Scope>>();
         logger.debug("References input to getScopedReferences: {}", references.size());
-        Iterator<ServiceReference<?>> iterator = references.iterator();
+        Iterator<ServiceReference<Scope>> iterator = references.iterator();
         while (iterator.hasNext()) {
-            ServiceReference<?> ref = iterator.next();
+            ServiceReference<Scope> ref = iterator.next();
             Scope serviceScope = getServiceScope(ref);
             if (scope.equals(serviceScope)) {
                 logger.debug("Adding {} ", ref);
@@ -133,11 +133,11 @@ final class ServiceScopingStrategy {
         return scopedReferences;
     }
 
-    private void restrictServicesToScope(Collection<ServiceReference<?>> references, Scope scope) {
+    private void restrictServicesToScope(Collection<ServiceReference<Scope>> references, Scope scope) {
         logger.debug("Before filtering: {}", references.size());
-        Iterator<ServiceReference<?>> iterator = references.iterator();
+        Iterator<ServiceReference<Scope>> iterator = references.iterator();
         while (iterator.hasNext()) {
-            ServiceReference<?> ref = (ServiceReference<?>) iterator.next();
+            ServiceReference<Scope> ref = (ServiceReference<Scope>) iterator.next();
             Scope serviceScope = getServiceScope(ref);
             if (!scope.equals(serviceScope)) {
                 logger.debug("Removing {} ", ref);
@@ -175,7 +175,7 @@ final class ServiceScopingStrategy {
         }
     }
 
-    private Scope getServiceScope(ServiceReference<?> ref) {
+    private Scope getServiceScope(ServiceReference<Scope> ref) {
         try {
             return this.scopeFactory.getServiceScope(ref);
         } catch (IllegalStateException ise) {
