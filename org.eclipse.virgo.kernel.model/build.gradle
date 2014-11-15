@@ -1,0 +1,51 @@
+apply plugin: 'osgi'
+
+jar {
+    manifest {
+        version = project.version
+        name = 'Virgo Kernel Runtime Artifact Model'
+        instruction 'Import-Package', '*'
+        instruction 'Export-Package', '*'
+        attributes( 'Bundle-SymbolicName': 'org.eclipse.virgo.kernel.model')
+        attributes( 'Built-By': "Gradle ${gradle.gradleVersion}" )
+    }
+}
+
+/*
+Import-Template: 
+ org.eclipse.virgo.kernel.*;version="${version:[=.=.=, =.+1)}",
+ org.eclipse.virgo.nano.*;version="${org.eclipse.virgo.nano:[=.=.=, =.+1)}",
+ org.eclipse.virgo.util.*;version="${org.eclipse.virgo.util:[=.=.=, =.+1)}",
+ org.eclipse.virgo.medic.*;version="${org.eclipse.virgo.medic:[=.=.=, =.+1)}",
+ org.aspectj.*;version="${org.aspectj:[=.=.=.=, +1)}",
+ org.springframework.*;version="${org.springframework:[2.5.6, +1)}",
+ javax.annotation.*;version="0",
+ javax.management.*;version="0",
+ org.osgi.framework.*;version="0",
+ org.osgi.service.cm.*;version="0",
+ org.osgi.util.tracker.*;version="0",
+ org.eclipse.equinox.region.*;version="${org.eclipse.equinox.region:[=.=.=, =.+1)}",
+ org.slf4j.*;version="${org.slf4j.api:[=.=.=, +1)}"
+Excluded-Exports: 
+ *.internal.*
+*/
+
+apply plugin: 'aspectj'
+
+compileAspect {
+     additionalAjcArgs = ['source' : '1.7', 'debug' : '', 'X' : 'noInline', 'preserveAllLocals' : '']
+}
+
+dependencies {
+	testCompile group: 'org.easymock', name: 'easymock', version: easymockVersion
+	testCompile project(':test:org.eclipse.virgo.test.stubs')
+	testCompile project(':kernel:org.eclipse.virgo.kernel.stubs')
+
+    compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.osgi", version: equinoxVersion, configuration: "compile"
+    compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.equinox.region", version: equinoxRegionVersion, configuration: "compile"
+
+	aspectpath project(':nano:org.eclipse.virgo.nano.core')
+	compile project(':nano:org.eclipse.virgo.nano.deployer.api')
+	compile project(':kernel:org.eclipse.virgo.kernel.osgi')
+	compile project(':kernel:org.eclipse.virgo.kernel.deployer')
+}

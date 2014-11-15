@@ -53,13 +53,13 @@ public class ServiceScopingStrategyTests {
 
     private Scope globalScope;
 
-    private ServiceReference<?> unscopedServiceReference;
+    private ServiceReference<Scope> unscopedServiceReference;
 
     private StubBundleContext unscopedBundleContext;
 
     private Scope appScope;
 
-    private ServiceReference<?> scopedServiceReference;
+    private ServiceReference<Scope> scopedServiceReference;
 
     private StubBundleContext scopedBundleContext;
 
@@ -148,7 +148,7 @@ public class ServiceScopingStrategyTests {
         expect(this.scopeServiceRepository.scopeHasMatchingService(eq(SCOPE_NAME), eq(CLASS_NAME), eq(FILTER))).andReturn(false).anyTimes();
         replay(this.scopeFactory, this.scopeServiceRepository, this.unscopedServiceReference);
 
-        Collection<ServiceReference<?>> references = new ShrinkableSet(this.unscopedServiceReference);
+        Collection<ServiceReference<Scope>> references = new ShrinkableSet(this.unscopedServiceReference);
         this.serviceScopingStrategy.scopeReferences(references, this.unscopedBundleContext, CLASS_NAME, FILTER);
         assertTrue(references.contains(this.unscopedServiceReference));
 
@@ -162,7 +162,7 @@ public class ServiceScopingStrategyTests {
         expect(this.scopeServiceRepository.scopeHasMatchingService(eq(SCOPE_NAME), eq(CLASS_NAME), eq(FILTER))).andReturn(false).anyTimes();
         replay(this.scopeFactory, this.scopeServiceRepository, this.scopedServiceReference);
 
-        Collection<ServiceReference<?>> references = new ShrinkableSet(this.scopedServiceReference);
+        Collection<ServiceReference<Scope>> references = new ShrinkableSet(this.scopedServiceReference);
         this.serviceScopingStrategy.scopeReferences(references, this.unscopedBundleContext, CLASS_NAME, FILTER);
         assertFalse(references.contains(this.unscopedServiceReference));
 
@@ -176,7 +176,7 @@ public class ServiceScopingStrategyTests {
         expect(this.scopeServiceRepository.scopeHasMatchingService(eq(SCOPE_NAME), eq(CLASS_NAME), eq(FILTER))).andReturn(true).anyTimes();
         replay(this.scopeFactory, this.scopeServiceRepository, this.scopedServiceReference);
 
-        Collection<ServiceReference<?>> references = new ShrinkableSet(this.scopedServiceReference);
+        Collection<ServiceReference<Scope>> references = new ShrinkableSet(this.scopedServiceReference);
         this.serviceScopingStrategy.scopeReferences(references, this.scopedBundleContext, CLASS_NAME, FILTER);
         assertTrue(references.contains(this.scopedServiceReference));
 
@@ -190,7 +190,7 @@ public class ServiceScopingStrategyTests {
         expect(this.scopeServiceRepository.scopeHasMatchingService(eq(SCOPE_NAME), eq(CLASS_NAME), eq(FILTER))).andReturn(false).anyTimes();
         replay(this.scopeFactory, this.scopeServiceRepository, this.scopedServiceReference);
 
-        Collection<ServiceReference<?>> references = new ShrinkableSet(this.scopedServiceReference);
+        Collection<ServiceReference<Scope>> references = new ShrinkableSet(this.scopedServiceReference);
         this.serviceScopingStrategy.scopeReferences(references, this.scopedBundleContext, CLASS_NAME, FILTER);
         assertTrue(references.contains(this.scopedServiceReference));
 
@@ -204,7 +204,7 @@ public class ServiceScopingStrategyTests {
         expect(this.scopeServiceRepository.scopeHasMatchingService(eq(SCOPE_NAME), eq(CLASS_NAME), eq(FILTER))).andReturn(false).anyTimes();
         replay(this.scopeFactory, this.scopeServiceRepository, this.unscopedServiceReference);
 
-        Collection<ServiceReference<?>> references = new ShrinkableSet(this.unscopedServiceReference);
+        Collection<ServiceReference<Scope>> references = new ShrinkableSet(this.unscopedServiceReference);
         this.serviceScopingStrategy.scopeReferences(references, this.scopedBundleContext, CLASS_NAME, FILTER);
         assertTrue(references.contains(this.unscopedServiceReference));
 
@@ -218,7 +218,7 @@ public class ServiceScopingStrategyTests {
         expect(this.scopeServiceRepository.scopeHasMatchingService(eq(SCOPE_NAME), eq(CLASS_NAME), eq(FILTER))).andReturn(true).anyTimes();
         replay(this.scopeFactory, this.scopeServiceRepository, this.unscopedServiceReference);
 
-        Collection<ServiceReference<?>> references = new ShrinkableSet(this.unscopedServiceReference);
+        Collection<ServiceReference<Scope>> references = new ShrinkableSet(this.unscopedServiceReference);
         this.serviceScopingStrategy.scopeReferences(references, this.scopedBundleContext, CLASS_NAME, FILTER);
         assertFalse(references.contains(this.unscopedServiceReference));
 
@@ -229,22 +229,22 @@ public class ServiceScopingStrategyTests {
      * This test uses a collection that does not support addition in order to place the
      * same constraints on the implementation as the service registry find hook.
      */
-    private final class ShrinkableSet extends HashSet<ServiceReference<?>> {
+    private final class ShrinkableSet extends HashSet<ServiceReference<Scope>> {
 
         private static final long serialVersionUID = 1L;
 
-        public ShrinkableSet(ServiceReference<?> e) {
+        public ShrinkableSet(ServiceReference<Scope> e) {
             super();
             super.add(e);
         }
 
         @Override
-        public boolean add(ServiceReference<?> e) {
+        public boolean add(ServiceReference<Scope> e) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean addAll(Collection<? extends ServiceReference<?>> c) {
+        public boolean addAll(Collection<? extends ServiceReference<Scope>> c) {
             throw new UnsupportedOperationException();
         }
         
