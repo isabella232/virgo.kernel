@@ -29,23 +29,3 @@ Import-Template:
 Excluded-Exports: 
  *.internal.*
 */
-
-apply plugin: 'aspectj'
-
-compileAspect {
-     additionalAjcArgs = ['source' : '1.8', 'debug' : '', 'X' : 'noInline', 'preserveAllLocals' : '']
-}
-
-dependencies {
-	testCompile group: 'org.easymock', name: 'easymock', version: easymockVersion
-	testCompile project(':test:org.eclipse.virgo.test.stubs')
-	testCompile project(':kernel:org.eclipse.virgo.kernel.stubs')
-
-    compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.osgi", version: equinoxVersion, configuration: "compile"
-    compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.equinox.region", version: equinoxRegionVersion, configuration: "compile"
-
-	aspectpath project(':nano:org.eclipse.virgo.nano.core')
-	compile project(':nano:org.eclipse.virgo.nano.deployer.api')
-	compile project(':kernel:org.eclipse.virgo.kernel.osgi')
-	compile project(':kernel:org.eclipse.virgo.kernel.deployer')
-}
