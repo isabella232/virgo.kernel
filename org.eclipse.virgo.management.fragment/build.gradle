@@ -1,0 +1,18 @@
+apply plugin: 'osgi'
+
+jar {
+    manifest {
+        version = project.version
+        name = 'Virgo Management Fragment'
+        instruction 'Import-Package', 'org.eclipse.equinox.region'
+        instruction 'Import-Package', 'javax.management'
+        instruction 'Export-Package', 'org.osgi.framework'
+        instruction 'Excluded-Imports', 'org.eclipse.gemini.management'
+        instruction 'Excluded-Exports', '*'
+        attributes( 'Bundle-SymbolicName': 'org.eclipse.virgo.management.fragment')
+        attributes( 'Built-By': "Gradle ${gradle.gradleVersion}" )
+//		Fragment-Host: org.eclipse.gemini.management;bundle-version="${org.eclipse.gemini.management:[=.=.=, =.+1)}"
+		attributes( 'Fragment-Host': "org.eclipse.gemini.management;bundle-version=\"${geminiManagementVersion}\"")
+		attributes( 'GeminiManagement-ObjectNameTranslator': "org.eclipse.virgo.management.fragment.VirgoObjectNameTranslator")
+    }
+}
