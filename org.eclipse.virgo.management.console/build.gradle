@@ -1,0 +1,45 @@
+apply plugin: 'osgi'
+
+// http://forums.gradle.org/gradle/topics/osgi_web_application_bundles
+
+// needs to run after jar to overwrite the default jar. :(
+// TODO gradle-build try to replace the jar action
+// http://forums.gradle.org/gradle/topics/replacing_tasks_overwrite_true_does_not_work_in_1_5
+// compileJava { actions = []; doLast { ... } }
+task managementConsole(type:Jar, dependsOn: ':kernel:org.eclipse.virgo.management.console:jar'){
+    manifest = osgiManifest {
+//        version = project.version
+        name = 'Virgo Admin Console'
+		instruction 'Built-By', "Gradle ${gradle.gradleVersion}"
+		instruction 'Bundle-ClassPath', "WEB-INF/classes"
+		instruction 'Bundle-Activator', "org.eclipse.virgo.management.console.Activator"
+		instruction 'Web-ContextPath', '/admin'
+        instruction 'Import-Package', 'org.slf4j'
+        instruction 'Import-Package', 'javax.servlet'
+        instruction 'Import-Package', 'javax.servlet.http'
+        instruction 'Import-Package', 'org.osgi.framework'
+        instruction 'Import-Package', 'org.osgi.service.http'
+        instruction 'Import-Package', 'org.osgi.service.url'
+        instruction 'Import-Package', 'org.osgi.util.tracker'
+        instruction 'Import-Package', 'org.jolokia.osgi.servlet'
+        instruction 'Import-Package', 'org.apache.commons.fileupload'
+        instruction 'Import-Package', 'org.eclipse.osgi.internal.signedcontent'
+        instruction 'Import-Package', 'javax.management'
+        instruction 'Import-Package', 'javax.security.auth'
+        instruction 'Import-Package', 'javax.security.auth.callback'
+        instruction 'Import-Package', 'javax.security.auth.login'
+        instruction 'Import-Package', 'javax.swing'
+        instruction 'Import-Package', 'javax.xml.parsers'
+        instruction 'Import-Package', 'javax.xml.stream'
+        instruction 'Import-Package', 'javax.xml.transform'
+        instruction 'Import-Package', 'org.w3c.dom'
+        instruction 'Import-Package', 'org.xml.sax'
+        instruction 'Import-Package', '!org.eclipse.virgo.management.console'
+		classesDir = project.sourceSets.main.output.classesDir
+		classpath = project.configurations.runtime
+	}
+	from 'src/main/webapp'
+	into("WEB-INF/classes"){
+		from sourceSets.main.output
+	}
+}
