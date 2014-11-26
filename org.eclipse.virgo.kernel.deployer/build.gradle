@@ -4,6 +4,29 @@ jar {
     manifest {
         version = project.version
         name = 'Virgo Kernel Deployer'
+        // dependencies from META-INF/spring/deployer-context
+        instruction 'Import-Package', 'org.eclipse.virgo.nano.deployer.api'
+        instruction 'Import-Package', 'org.eclipse.virgo.nano.deployer.api.core'
+        instruction 'Import-Package', 'org.eclipse.virgo.kernel.artifact.fs'
+        instruction 'Import-Package', 'org.osgi.service.event'
+        instruction 'Import-Package', 'org.eclipse.virgo.nano.core'
+        instruction 'Import-Package', 'org.eclipse.virgo.kernel.osgi.framework'
+        instruction 'Import-Package', 'org.eclipse.virgo.nano.shim.scope'
+        instruction 'Import-Package', 'org.eclipse.virgo.repository'
+        instruction 'Import-Package', 'org.osgi.framework'
+        // dependencies from META-INF/spring/internal-osgi-context
+        instruction 'Import-Package', 'org.osgi.service.cm'
+        instruction 'Import-Package', 'org.eclipse.virgo.medic.eventlog'
+        instruction 'Import-Package', 'org.eclipse.virgo.medic.dump'
+        instruction 'Import-Package', 'org.osgi.service.packageadmin'
+        instruction 'Import-Package', 'org.eclipse.virgo.nano.shim.serviceability'
+        instruction 'Import-Package', 'org.eclipse.virgo.kernel.services.work'
+        instruction 'Import-Package', 'org.eclipse.virgo.kernel.osgi.quasi'
+        instruction 'Import-Package', 'org.eclipse.virgo.kernel.module'
+        // dependencies from META-INF/spring/management-context
+        instruction 'Import-Package', 'org.eclipse.virgo.kernel.management'
+        // dependencies from META-INF/spring/serviceability-context
+        instruction 'Import-Package', 'org.eclipse.virgo.nano.serviceability.dump'
         instruction 'Import-Package', '*'
         instruction 'Export-Package', '*'
         attributes( 'Bundle-SymbolicName': 'org.eclipse.virgo.kernel.deployer')
