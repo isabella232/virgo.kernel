@@ -7,8 +7,11 @@
 	<!-- Configuration for OSGi services that the kernel depends on and provides 
 		to the framework. These services are not considered part of the kernel API. -->
 
+<!-- 
+	TODO - gradle-build remove unused reference
 	<osgi:reference id="configAdmin"
 		interface="org.osgi.service.cm.ConfigurationAdmin" />
+ -->
 
 	<osgi:reference id="eventLogger"
 		interface="org.eclipse.virgo.medic.eventlog.EventLogger" />

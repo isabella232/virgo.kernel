@@ -50,8 +50,10 @@ project(':kernel:org.eclipse.virgo.kernel.osgi') {
 
         compile project(':util:org.eclipse.virgo.util.osgi.manifest')
         compile project(':medic:org.eclipse.virgo.medic')
-        aspectpath project(':nano:org.eclipse.virgo.nano.core')
+        compile project(':nano:org.eclipse.virgo.nano.core')
         compile project(':kernel:org.eclipse.virgo.kernel.artifact')
+
+        aspectpath project(':nano:org.eclipse.virgo.nano.core')
     }
 }
 
@@ -72,17 +74,26 @@ project(':kernel:org.eclipse.virgo.kernel.deployer') {
 
         compile group: "org.eclipse.gemini", name: "org.eclipse.gemini.blueprint.core", version: geminiBlueprintVersion, configuration: "compile", ext: "jar"
 
-        compile project(':util:org.eclipse.virgo.util.common')
-        compile project(':util:org.eclipse.virgo.util.math')
-        compile project(':util:org.eclipse.virgo.util.io')
-        compile project(':util:org.eclipse.virgo.util.osgi.manifest')
+        compile project(':kernel:org.eclipse.virgo.kernel.artifact')
+        compile project(':kernel:org.eclipse.virgo.kernel.osgi')
+        compile project(':kernel:org.eclipse.virgo.kernel.services')
         compile project(':medic:org.eclipse.virgo.medic')
         compile project(':nano:org.eclipse.virgo.nano.core')
         compile project(':nano:org.eclipse.virgo.nano.deployer.api')
         compile project(':nano:org.eclipse.virgo.nano.deployer.hot')
         compile project(':repository:org.eclipse.virgo.repository')
-        compile project(':kernel:org.eclipse.virgo.kernel.artifact')
-        compile project(':kernel:org.eclipse.virgo.kernel.osgi')
+        compile project(':util:org.eclipse.virgo.util.common')
+        compile project(':util:org.eclipse.virgo.util.io')
+        compile project(':util:org.eclipse.virgo.util.math')
+        compile project(':util:org.eclipse.virgo.util.osgi.manifest')
+
+        //        aspectpath project(':kernel:org.eclipse.virgo.kernel.osgi')
+        //        aspectpath project(':kernel:org.eclipse.virgo.kernel.services')
+        aspectpath project(':medic:org.eclipse.virgo.medic')
+        aspectpath project(':nano:org.eclipse.virgo.nano.core')
+        //        aspectpath project(':nano:org.eclipse.virgo.nano.deployer.api')
+        //        aspectpath project(':nano:org.eclipse.virgo.nano.deployer.hot')
+        aspectpath project(':util:org.eclipse.virgo.util.jmx')
     }
 }
 
@@ -187,6 +198,7 @@ project(':kernel:org.eclipse.virgo.kernel.services') {
         compile project(':medic:org.eclipse.virgo.medic')
         compile project(':nano:org.eclipse.virgo.nano.core')
         compile project(':repository:org.eclipse.virgo.repository')
+        compile project(':kernel:org.eclipse.virgo.kernel.artifact')
     }
 }
 
@@ -287,8 +299,7 @@ project(':kernel:org.eclipse.virgo.management.console') {
         testCompile group: "org.springframework", name: "org.springframework.core", version: springframeworkVersion, configuration: "compile", ext: "jar"
         testCompile group: "org.springframework", name: "org.springframework.test", version: springframeworkVersion, configuration: "compile", ext: "jar"
         testCompile group: "org.eclipse.virgo.mirrored", name: "org.mozilla.javascript", version: "1.7.4.v201209142200", configuration: "compile", ext: "jar"
-        // TODO - check CQ for commons logging / availibility in Orbit
-        testCompile group: "org.apache.commons", name: "com.springsource.org.apache.commons.logging", version: "1.1.1", configuration: "compile", ext: "jar"
+        testCompile group: "org.apache.commons", name: "com.springsource.org.apache.commons.logging", version: commonsLoggingVersion, configuration: "compile", ext: "jar"
         testCompile group: "org.apache.commons", name: "com.springsource.org.apache.commons.io", version: commonsIoVersion, configuration: "compile", ext: "jar"
 
         compile group: "org.eclipse.virgo.mirrored", name: "org.slf4j.api", version: slf4jVersion, configuration: "compile", ext: "jar"
