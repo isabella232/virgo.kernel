@@ -113,6 +113,7 @@ project(':kernel:org.eclipse.virgo.kernel.deployer.dm') {
 
         compile project(':medic:org.eclipse.virgo.medic')
         compile project(':nano:org.eclipse.virgo.nano.core')
+        compile project(':kernel:org.eclipse.virgo.kernel.agent.dm')
         compile project(':kernel:org.eclipse.virgo.kernel.deployer')
     }
 }
@@ -134,8 +135,11 @@ project(':kernel:org.eclipse.virgo.kernel.dmfragment') {
 
         // TODO - check aspectj :(
         //		<dependency org="org.eclipse.virgo.medic" name="org.eclipse.virgo.medic" rev="${org.eclipse.virgo.medic}" conf="aspects, compile->runtime"/>
+//        aspectpath project(':medic:org.eclipse.virgo.medic')
+
         compile project(':medic:org.eclipse.virgo.medic')
         compile project(':nano:org.eclipse.virgo.nano.core')
+        compile project(':kernel:org.eclipse.virgo.kernel.agent.dm')
         compile project(':kernel:org.eclipse.virgo.kernel.osgi')
         compile project(':kernel:org.eclipse.virgo.kernel.deployer')
     }
