@@ -40,23 +40,6 @@ project(':kernel:org.eclipse.virgo.kernel.artifact') {
     }
 }
 
-project(':kernel:org.eclipse.virgo.kernel.osgi') {
-    dependencies {
-        compile group: "org.eclipse.virgo.mirrored", name: "org.slf4j.api", version: slf4jVersion, configuration: "compile", ext: "jar"
-
-        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.osgi", version: equinoxVersion, configuration: "compile", ext: "jar"
-        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.osgi.services", version: osgiServicesVersion, configuration: "compile", ext: "jar"
-        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.equinox.region", version: equinoxRegionVersion, configuration: "compile", ext: "jar"
-
-        compile project(':util:org.eclipse.virgo.util.osgi.manifest')
-        compile project(':medic:org.eclipse.virgo.medic')
-        compile project(':nano:org.eclipse.virgo.nano.core')
-        compile project(':kernel:org.eclipse.virgo.kernel.artifact')
-
-        aspectpath project(':nano:org.eclipse.virgo.nano.core')
-    }
-}
-
 project(':kernel:org.eclipse.virgo.kernel.deployer') {
     dependencies {
         testCompile group: 'org.easymock', name: 'easymock', version: easymockVersion
@@ -84,16 +67,15 @@ project(':kernel:org.eclipse.virgo.kernel.deployer') {
         compile project(':repository:org.eclipse.virgo.repository')
         compile project(':util:org.eclipse.virgo.util.common')
         compile project(':util:org.eclipse.virgo.util.io')
+        compile project(':util:org.eclipse.virgo.util.jmx')
         compile project(':util:org.eclipse.virgo.util.math')
         compile project(':util:org.eclipse.virgo.util.osgi.manifest')
 
-        //        aspectpath project(':kernel:org.eclipse.virgo.kernel.osgi')
-        //        aspectpath project(':kernel:org.eclipse.virgo.kernel.services')
-        aspectpath project(':medic:org.eclipse.virgo.medic')
-        aspectpath project(':nano:org.eclipse.virgo.nano.core')
-        //        aspectpath project(':nano:org.eclipse.virgo.nano.deployer.api')
-        //        aspectpath project(':nano:org.eclipse.virgo.nano.deployer.hot')
-        aspectpath project(':util:org.eclipse.virgo.util.jmx')
+        if (System.properties['weaving.enabled'] == 'true') {
+            aspectpath project(':medic:org.eclipse.virgo.medic')
+            aspectpath project(':nano:org.eclipse.virgo.nano.core')
+            aspectpath project(':util:org.eclipse.virgo.util.jmx')
+        }
     }
 }
 
@@ -111,10 +93,14 @@ project(':kernel:org.eclipse.virgo.kernel.deployer.dm') {
 
         compile group: "org.eclipse.gemini", name: "org.eclipse.gemini.blueprint.core", version: geminiBlueprintVersion, configuration: "compile", ext: "jar"
 
-        compile project(':medic:org.eclipse.virgo.medic')
-        compile project(':nano:org.eclipse.virgo.nano.core')
         compile project(':kernel:org.eclipse.virgo.kernel.agent.dm')
         compile project(':kernel:org.eclipse.virgo.kernel.deployer')
+        compile project(':medic:org.eclipse.virgo.medic')
+        compile project(':nano:org.eclipse.virgo.nano.core')
+
+        if (System.properties['weaving.enabled'] == 'true') {
+            aspectpath project(':medic:org.eclipse.virgo.medic')
+        }
     }
 }
 
@@ -133,15 +119,56 @@ project(':kernel:org.eclipse.virgo.kernel.dmfragment') {
         compile group: "org.eclipse.gemini", name: "org.eclipse.gemini.blueprint.extender", version: geminiBlueprintVersion, configuration: "compile", ext: "jar"
         compile group: "org.eclipse.gemini", name: "org.eclipse.gemini.blueprint.io", version: geminiBlueprintVersion, configuration: "compile", ext: "jar"
 
-        // TODO - check aspectj :(
-        //		<dependency org="org.eclipse.virgo.medic" name="org.eclipse.virgo.medic" rev="${org.eclipse.virgo.medic}" conf="aspects, compile->runtime"/>
-//        aspectpath project(':medic:org.eclipse.virgo.medic')
-
-        compile project(':medic:org.eclipse.virgo.medic')
-        compile project(':nano:org.eclipse.virgo.nano.core')
         compile project(':kernel:org.eclipse.virgo.kernel.agent.dm')
         compile project(':kernel:org.eclipse.virgo.kernel.osgi')
         compile project(':kernel:org.eclipse.virgo.kernel.deployer')
+        compile project(':medic:org.eclipse.virgo.medic')
+        compile project(':nano:org.eclipse.virgo.nano.core')
+
+        if (System.properties['weaving.enabled'] == 'true') {
+            aspectpath project(':medic:org.eclipse.virgo.medic')
+        }
+    }
+}
+
+project(':kernel:org.eclipse.virgo.kernel.model') {
+    dependencies {
+        testCompile group: 'org.easymock', name: 'easymock', version: easymockVersion
+        testCompile project(':test:org.eclipse.virgo.test.stubs')
+        testCompile project(':kernel:org.eclipse.virgo.kernel.stubs')
+
+        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.osgi", version: equinoxVersion, configuration: "compile", ext: "jar"
+        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.equinox.region", version: equinoxRegionVersion, configuration: "compile", ext: "jar"
+
+        compile project(':kernel:org.eclipse.virgo.kernel.osgi')
+        compile project(':kernel:org.eclipse.virgo.kernel.deployer')
+        compile project(':medic:org.eclipse.virgo.medic')
+        compile project(':nano:org.eclipse.virgo.nano.deployer.api')
+        compile project(':util:org.eclipse.virgo.util.jmx')
+
+        if (System.properties['weaving.enabled'] == 'true') {
+            aspectpath project(':medic:org.eclipse.virgo.medic')
+            aspectpath project(':util:org.eclipse.virgo.util.jmx')
+        }
+    }
+}
+
+project(':kernel:org.eclipse.virgo.kernel.osgi') {
+    dependencies {
+        compile group: "org.eclipse.virgo.mirrored", name: "org.slf4j.api", version: slf4jVersion, configuration: "compile", ext: "jar"
+
+        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.osgi", version: equinoxVersion, configuration: "compile", ext: "jar"
+        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.osgi.services", version: osgiServicesVersion, configuration: "compile", ext: "jar"
+        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.equinox.region", version: equinoxRegionVersion, configuration: "compile", ext: "jar"
+
+        compile project(':util:org.eclipse.virgo.util.osgi.manifest')
+        compile project(':medic:org.eclipse.virgo.medic')
+        compile project(':nano:org.eclipse.virgo.nano.core')
+        compile project(':kernel:org.eclipse.virgo.kernel.artifact')
+
+        if (System.properties['weaving.enabled'] == 'true') {
+            aspectpath project(':nano:org.eclipse.virgo.nano.core')
+        }
     }
 }
 
@@ -165,22 +192,6 @@ project(':kernel:org.eclipse.virgo.kernel.stubs') {
         compile project(':kernel:org.eclipse.virgo.kernel.artifact')
         compile project(':kernel:org.eclipse.virgo.kernel.deployer')
         compile project(':kernel:org.eclipse.virgo.kernel.osgi')
-    }
-}
-
-project(':kernel:org.eclipse.virgo.kernel.model') {
-    dependencies {
-        testCompile group: 'org.easymock', name: 'easymock', version: easymockVersion
-        testCompile project(':test:org.eclipse.virgo.test.stubs')
-        testCompile project(':kernel:org.eclipse.virgo.kernel.stubs')
-
-        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.osgi", version: equinoxVersion, configuration: "compile", ext: "jar"
-        compile group: "org.eclipse.virgo.mirrored", name: "org.eclipse.equinox.region", version: equinoxRegionVersion, configuration: "compile", ext: "jar"
-
-        aspectpath project(':nano:org.eclipse.virgo.nano.core')
-        compile project(':nano:org.eclipse.virgo.nano.deployer.api')
-        compile project(':kernel:org.eclipse.virgo.kernel.osgi')
-        compile project(':kernel:org.eclipse.virgo.kernel.deployer')
     }
 }
 
@@ -271,17 +282,20 @@ project(':kernel:org.eclipse.virgo.shell.command') {
 
         compile group: "org.springframework", name: "org.springframework.core", version: springframeworkVersion, configuration: "compile", ext: "jar"
 
+        compile project(':kernel:org.eclipse.virgo.kernel.deployer')
+        compile project(':kernel:org.eclipse.virgo.kernel.model')
+        compile project(':kernel:org.eclipse.virgo.kernel.osgi')
+        compile project(':medic:org.eclipse.virgo.medic')
+        compile project(':nano:org.eclipse.virgo.nano.deployer.api')
+        compile project(':repository:org.eclipse.virgo.repository')
         compile project(':util:org.eclipse.virgo.util.common')
         compile project(':util:org.eclipse.virgo.util.io')
         compile project(':util:org.eclipse.virgo.util.osgi')
         compile project(':util:org.eclipse.virgo.util.osgi.manifest')
-        compile project(':repository:org.eclipse.virgo.repository')
-        compile project(':nano:org.eclipse.virgo.nano.deployer.api')
-        compile project(':kernel:org.eclipse.virgo.kernel.deployer')
-        compile project(':kernel:org.eclipse.virgo.kernel.model')
-        compile project(':kernel:org.eclipse.virgo.kernel.osgi')
 
-        compile project(':medic:org.eclipse.virgo.medic')
+        if (System.properties['weaving.enabled'] == 'true') {
+            aspectpath project(':medic:org.eclipse.virgo.medic')
+        }
     }
 }
 
