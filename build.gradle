@@ -316,7 +316,7 @@ project(':kernel:org.eclipse.virgo.management.console') {
         testCompile group: 'org.easymock', name: 'easymock', version: easymockVersion
         testCompile group: "org.springframework", name: "org.springframework.core", version: springframeworkVersion, configuration: "compile", ext: "jar"
         testCompile group: "org.springframework", name: "org.springframework.test", version: springframeworkVersion, configuration: "compile", ext: "jar"
-        testCompile group: "org.eclipse.virgo.mirrored", name: "org.mozilla.javascript", version: "1.7.4.v201209142200", configuration: "compile", ext: "jar"
+        testCompile group: "org.eclipse.virgo.mirrored", name: "org.mozilla.javascript", version: mozillaJavascriptVersion, configuration: "compile", ext: "jar"
         testCompile group: "org.apache.commons", name: "com.springsource.org.apache.commons.logging", version: commonsLoggingVersion, configuration: "compile", ext: "jar"
         testCompile group: "org.apache.commons", name: "com.springsource.org.apache.commons.io", version: commonsIoVersion, configuration: "compile", ext: "jar"
 
