@@ -143,8 +143,11 @@ project(':kernel:org.eclipse.virgo.kernel.model') {
         compile project(':kernel:org.eclipse.virgo.kernel.osgi')
         compile project(':kernel:org.eclipse.virgo.kernel.deployer')
         compile project(':medic:org.eclipse.virgo.medic')
+        compile project(':nano:org.eclipse.virgo.nano.core')
         compile project(':nano:org.eclipse.virgo.nano.deployer.api')
         compile project(':util:org.eclipse.virgo.util.jmx')
+
+        aspectpath project(':nano:org.eclipse.virgo.nano.core')
 
         if (System.properties['weaving.enabled'] == 'true') {
             aspectpath project(':medic:org.eclipse.virgo.medic')
@@ -166,9 +169,7 @@ project(':kernel:org.eclipse.virgo.kernel.osgi') {
         compile project(':nano:org.eclipse.virgo.nano.core')
         compile project(':kernel:org.eclipse.virgo.kernel.artifact')
 
-        if (System.properties['weaving.enabled'] == 'true') {
-            aspectpath project(':nano:org.eclipse.virgo.nano.core')
-        }
+        aspectpath project(':nano:org.eclipse.virgo.nano.core')
     }
 }
 
