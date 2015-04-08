@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
-
 import org.eclipse.virgo.kernel.osgi.framework.BundleClassLoaderUnavailableException;
 import org.eclipse.virgo.kernel.osgi.framework.InstrumentableClassLoader;
 import org.eclipse.virgo.kernel.userregion.internal.equinox.EquinoxOsgiFramework;
@@ -97,7 +96,7 @@ public class EquinoxOsgiFrameworkTests extends AbstractOsgiFrameworkLaunchingTes
      * @throws BundleException
      */
     private Bundle installSpringCore(EquinoxOsgiFramework osgi) throws BundleException {
-        osgi.getBundleContext().installBundle("file:///" + new File(System.getProperty("user.home") + "/virgo-build-cache/ivy-cache/repository/org.apache.commons/com.springsource.org.apache.commons.logging/1.1.1/com.springsource.org.apache.commons.logging-1.1.1.jar").getAbsolutePath());
-        return osgi.getBundleContext().installBundle("file:///" + new File(System.getProperty("user.home") + "/virgo-build-cache/ivy-cache/repository/org.springframework/org.springframework.core/2.5.6.SEC01/org.springframework.core-2.5.6.SEC01.jar").getAbsolutePath());
+        osgi.getBundleContext().installBundle("file:///" + new File(System.getProperty("user.home") + "/.gradle/caches/modules-2/files-2.1/org.apache.commons/com.springsource.org.apache.commons.logging/1.1.1/7657caf2c78e1d79c74d36f2ae128a115f7cc180/com.springsource.org.apache.commons.logging-1.1.1.jar").getAbsolutePath());
+        return osgi.getBundleContext().installBundle("file:///" + new File(System.getProperty("user.home") + "/.gradle/caches/modules-2/files-2.1/org.springframework/org.springframework.core/3.1.0.RELEASE/3a18c725dd321e457cfb48547d40c2862216bb3b/org.springframework.core-3.1.0.RELEASE.jar").getAbsolutePath());
     }
 }
