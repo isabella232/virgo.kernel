@@ -4,6 +4,13 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
+def customOrder(ZipEntry a, ZipEntry b) {
+	if (a.name == 'META-INF/MANIFEST.MF' && b.name == 'META-INF/MANIFEST.MF') return 0
+	if (a.name == 'META-INF/MANIFEST.MF') return -1
+	if (b.name == 'META-INF/MANIFEST.MF') return 1
+	return a.name.compareTo(b.name)
+}
+
 project(':kernel:org.eclipse.virgo.kernel.agent.dm') {
 	dependencies {
 		testCompile group: 'org.easymock', name: 'easymock', version: easymockVersion
@@ -254,7 +261,7 @@ project(':kernel:org.eclipse.virgo.kernel.services') {
 
 			println "------------"
 			byte[] readBuffer = new byte[2156]
-			jarFile.entries().findAll { !it.directory && !(it.name == "META-INF/MANIFEST.MF") }.each {
+			jarFile.entries().findAll { !it.directory && !(it.name == "META-INF/MANIFEST.MF") }.sort( {a,b -> customOrder(a,b) } ).each {
 				println "adding ${it.name} to ${cloneFileName}"
 				jarOutputStream.putNextEntry(new JarEntry(it.name))
 				jarOutputStream << jarFile.getInputStream(it)
