@@ -62,7 +62,10 @@ public class JarFileArtifactFSRefreshTests {
     public void checkBsn(ArtifactFS artifactFS, String bsn) throws IOException {
         ArtifactFSEntry entry = artifactFS.getEntry("META-INF/MANIFEST.MF");
         InputStream inputStream = entry.getInputStream();
-        String manifest = new Scanner(inputStream).useDelimiter("\\A").next();
+        String manifest;
+		try (Scanner scanner = new Scanner(inputStream)) {
+			manifest = scanner.useDelimiter("\\A").next();
+		}
         assertTrue(manifest.contains(bsn));
         inputStream.close();
     }
