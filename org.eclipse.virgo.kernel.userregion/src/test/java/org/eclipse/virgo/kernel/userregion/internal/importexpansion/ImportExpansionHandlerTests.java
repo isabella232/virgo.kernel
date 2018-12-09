@@ -76,11 +76,11 @@ public class ImportExpansionHandlerTests {
         LibraryBridge libraryBridge = new LibraryBridge(new StubHashGenerator());
 
         this.repository.addArtifactDescriptor(bundleBridge.generateArtifactDescriptor(new File(System.getProperty("user.home")
-                + "/.gradle/caches/modules-2/files-2.1/org.eclipse.virgo.mirrored/org.springframework.core/4.3.18.RELEASE"
-                + "/74796680c0057c1cdc78f07a3d1194d237a73c29/org.springframework.core-4.3.18.RELEASE.jar")));
+                + "/.gradle/caches/modules-2/files-2.1/org.eclipse.virgo.mirrored/org.springframework.core/4.3.21.RELEASE"
+                + "/f34af5b4dae5ba6f4c5d949b3b8ac2be41e1266a/org.springframework.core-4.3.21.RELEASE.jar")));
         this.repository.addArtifactDescriptor(bundleBridge.generateArtifactDescriptor(new File(System.getProperty("user.home")
-                + "/.gradle/caches/modules-2/files-2.1/org.eclipse.virgo.mirrored/org.springframework.beans/4.3.18.RELEASE"
-                + "/56f156056a8c5df4c7ed2ce664b02ae2e0b1321/org.springframework.beans-4.3.18.RELEASE.jar")));
+                + "/.gradle/caches/modules-2/files-2.1/org.eclipse.virgo.mirrored/org.springframework.beans/4.3.21.RELEASE"
+                + "/85792e44bd0d8fe022b1acf52250e1e3d3d37d12/org.springframework.beans-4.3.21.RELEASE.jar")));
         this.repository.addArtifactDescriptor(bundleBridge.generateArtifactDescriptor(new File("src/test/resources/silht/bundles/fragmentOne")));
         this.repository.addArtifactDescriptor(bundleBridge.generateArtifactDescriptor(new File("src/test/resources/silht/bundles/fragmentTwo")));
         this.repository.addArtifactDescriptor(bundleBridge.generateArtifactDescriptor(new File("src/test/resources/silht/bundles/fragmentThree")));
@@ -120,7 +120,7 @@ public class ImportExpansionHandlerTests {
         for (ImportedPackage packageImport : packageImports) {
             Map<String, String> attributes = packageImport.getAttributes();
             assertEquals("org.springframework.core", attributes.get("bundle-symbolic-name"));
-            assertEquals(new VersionRange("[4.3.18.RELEASE,4.3.18.RELEASE]"), new VersionRange(attributes.get("bundle-version")));
+            assertEquals(new VersionRange("[4.3.21.RELEASE,4.3.21.RELEASE]"), new VersionRange(attributes.get("bundle-version")));
         }
     }
 
@@ -155,7 +155,7 @@ public class ImportExpansionHandlerTests {
             } else {
                 assertEquals("org.springframework.core", attributes.get("bundle-symbolic-name"));
             }
-            assertEquals(new VersionRange("[4.3.18.RELEASE,4.3.18.RELEASE]"), new VersionRange(attributes.get("bundle-version")));
+            assertEquals(new VersionRange("[4.3.21.RELEASE,4.3.21.RELEASE]"), new VersionRange(attributes.get("bundle-version")));
         }
 
     }

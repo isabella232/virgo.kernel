@@ -103,7 +103,7 @@ public class EquinoxOsgiFrameworkTests extends AbstractOsgiFrameworkLaunchingTes
             + "/.gradle/caches/modules-2/files-2.1/org.eclipse.virgo.mirrored/org.apache.commons.codec/1.10.0/"
             + "8aff50e99bd7e53f8c4f5fe45c2a63f1d47dd19c/org.apache.commons.codec-1.10.0.jar").getAbsolutePath());
         return osgi.getBundleContext().installBundle("file:///" + new File(System.getProperty("user.home")
-            + "/.gradle/caches/modules-2/files-2.1/org.eclipse.virgo.mirrored/org.springframework.core/4.3.18.RELEASE"
-            + "/74796680c0057c1cdc78f07a3d1194d237a73c29/org.springframework.core-4.3.18.RELEASE.jar").getAbsolutePath());
+            + "/.gradle/caches/modules-2/files-2.1/org.eclipse.virgo.mirrored/org.springframework.core/4.3.21.RELEASE"
+            + "/f34af5b4dae5ba6f4c5d949b3b8ac2be41e1266a/org.springframework.core-4.3.21.RELEASE.jar").getAbsolutePath());
     }
 }
