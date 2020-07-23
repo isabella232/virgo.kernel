@@ -130,8 +130,7 @@ public class BundleBridgeTests {
     @Test
     public void testBuildDictionary() throws ArtifactGenerationException, IOException {
         File testFile = new File(System.getProperty("user.home")
-                + "/.gradle/caches/modules-2/files-2.1/org.eclipse.virgo.mirrored/javax.servlet/3.1.0.20170128/"
-                + "e1928d3e6307028208245e12ca5d11b9a451daf9/javax.servlet-3.1.0.20170128.jar");
+                + "/.gradle/caches/modules-2/files-2.1/org.eclipse.virgo.mirrored/javax.servlet/3.1.0.20200621/db9aadeedc05485e4345e1c0ec1e0943371cb70d/javax.servlet-3.1.0.20200621.jar");
 
         ArtifactDescriptor inputArtefact = BUNDLE_BRIDGE.generateArtifactDescriptor(testFile);
 
